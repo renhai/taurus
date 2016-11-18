@@ -27,7 +27,7 @@ public class RottenTomatoesControllerTests extends AbstractTaurusTest {
     @Test
     public void noParamAlbumShouldReturnError() throws Exception {
 
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/movies"))
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/rt/1.0/movies"))
         		.andDo(MockMvcResultHandlers.print())
         		.andExpect(MockMvcResultMatchers.status().is4xxClientError());
     }
@@ -35,7 +35,7 @@ public class RottenTomatoesControllerTests extends AbstractTaurusTest {
     @Test
     public void paramAlbumShouldReturnTailoredMessage() throws Exception {
 
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/movies").param("q", "sully"))
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/rt/1.0/movies").param("q", "sully"))
         	.andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("Sully"))

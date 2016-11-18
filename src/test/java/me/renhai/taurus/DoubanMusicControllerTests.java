@@ -27,7 +27,7 @@ public class DoubanMusicControllerTests extends AbstractTaurusTest {
     @Test
     public void noParamAlbumShouldReturnError() throws Exception {
 
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/albums"))
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/db/1.0/albums"))
         		.andDo(MockMvcResultHandlers.print())
         		.andExpect(MockMvcResultMatchers.status().is4xxClientError());
     }
@@ -35,7 +35,7 @@ public class DoubanMusicControllerTests extends AbstractTaurusTest {
     @Test
     public void paramAlbumShouldReturnTailoredMessage() throws Exception {
 
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/albums").param("q", "崔健 光冻"))
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/db/1.0/albums").param("q", "崔健 光冻"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("光冻"))
