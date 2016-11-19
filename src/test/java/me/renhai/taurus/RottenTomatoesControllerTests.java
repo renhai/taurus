@@ -25,7 +25,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 public class RottenTomatoesControllerTests extends AbstractTaurusTest {
 
     @Test
-    public void noParamAlbumShouldReturnError() throws Exception {
+    public void noParamMovieShouldReturnError() throws Exception {
 
         this.mockMvc.perform(MockMvcRequestBuilders.get("/api/rt/1.0/movies"))
         		.andDo(MockMvcResultHandlers.print())
@@ -33,7 +33,7 @@ public class RottenTomatoesControllerTests extends AbstractTaurusTest {
     }
 
     @Test
-    public void paramAlbumShouldReturnTailoredMessage() throws Exception {
+    public void paramMovieShouldReturnTailoredMessage() throws Exception {
 
         this.mockMvc.perform(MockMvcRequestBuilders.get("/api/rt/1.0/movies").param("q", "sully"))
         	.andDo(MockMvcResultHandlers.print())

@@ -20,8 +20,8 @@ public abstract class AbstractSpider<T, C> {
 			LOG.info("init webdriver");
 			WebDriver driver = new PhantomJSDriver();
 			driver.manage().window().maximize();
-			driver.manage().timeouts().pageLoadTimeout(15, TimeUnit.SECONDS);
-			driver.manage().timeouts().setScriptTimeout(10, TimeUnit.SECONDS);
+//			driver.manage().timeouts().pageLoadTimeout(15, TimeUnit.SECONDS);
+//			driver.manage().timeouts().setScriptTimeout(10, TimeUnit.SECONDS);
 			return driver;
 			
 //			System.setProperty("webdriver.chrome.driver", "/Users/andy/Documents/workspace/chromedriver");
