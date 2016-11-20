@@ -1,11 +1,14 @@
 package me.renhai.taurus.spider.douban;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class DoubanAlbum {
+public class DoubanAlbum implements Serializable {
+	private static final long serialVersionUID = -427341013997312958L;
+	
 	private String name;
 	private String performer;
 	private String genre;

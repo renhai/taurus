@@ -1,7 +1,11 @@
 package me.renhai.taurus.spider.douban;
 
-public class DoubanAlbumRating {
+import java.io.Serializable;
 
+public class DoubanAlbumRating implements Serializable {
+
+	private static final long serialVersionUID = -8237541067646233146L;
+	
 	private double rating;
 	private int ratingSum;
 	
