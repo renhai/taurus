@@ -19,6 +19,7 @@ target/
 ehthumbs.db
 Thumbs.db
 
+*.out
 *.log
 *.7z
 *.dmg
