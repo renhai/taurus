@@ -152,12 +152,12 @@ public class RottenTomatoesProcessor implements PageProcessor {
 		return site;
 	}
 	
-	public static void main(String[] args) {
-        Spider.create(new RottenTomatoesProcessor())
-		.addPipeline(new JsonFilePipeline("/Users/andy/Downloads"))
-		.addUrl("https://www.rottentomatoes.com/")
-		.thread(5)
-		.run();
-	}
+//	public static void main(String[] args) {
+//        Spider.create(new RottenTomatoesProcessor())
+//		.addPipeline(new JsonFilePipeline("/Users/andy/Downloads"))
+//		.addUrl("https://www.rottentomatoes.com/")
+//		.thread(5)
+//		.run();
+//	}
 
 }
