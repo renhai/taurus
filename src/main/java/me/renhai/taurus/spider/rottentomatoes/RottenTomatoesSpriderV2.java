@@ -29,7 +29,8 @@ public class RottenTomatoesSpriderV2 {
 	
 	public RTMovie search(String conditions) throws Exception {
 		conditions = URLEncoder.encode(conditions, "UTF-8");
-		String url = "https://www.rottentomatoes.com/search/?search=" + conditions;
+//		String url = "https://www.rottentomatoes.com/search/?search=" + conditions;
+		String url = "https://www.rottentomatoes.com/api/private/v1.0/search/?catCount=2&q=" + conditions;
     	ResultItemsCollectorPipeline pipline = new ResultItemsCollectorPipeline();
         Spider.create(rottenTomatoesMovieProcessor)
         		.addPipeline(pipline)

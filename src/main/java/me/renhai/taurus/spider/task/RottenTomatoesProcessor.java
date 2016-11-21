@@ -1,4 +1,4 @@
-package me.renhai.taurus.spider.rottentomatoes;
+package me.renhai.taurus.spider.task;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -10,32 +10,31 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
 import com.jayway.jsonpath.ReadContext;
 
+import me.renhai.taurus.spider.rottentomatoes.RTAudienceScore;
+import me.renhai.taurus.spider.rottentomatoes.RTCast;
+import me.renhai.taurus.spider.rottentomatoes.RTCriticScore;
+import me.renhai.taurus.spider.rottentomatoes.RTRating;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
+import us.codecraft.webmagic.Spider;
+import us.codecraft.webmagic.pipeline.JsonFilePipeline;
 import us.codecraft.webmagic.processor.PageProcessor;
 import us.codecraft.webmagic.selector.HtmlNode;
 import us.codecraft.webmagic.selector.Selectable;
 
-@Service
-//@Scope("prototype")
-public class RottenTomatoesMovieProcessor implements PageProcessor {
-	private static final Logger LOG = LoggerFactory.getLogger(RottenTomatoesMovieProcessor.class);
+public class RottenTomatoesProcessor implements PageProcessor {
+	private static final Logger LOG = LoggerFactory.getLogger(RottenTomatoesProcessor.class);
 	private Configuration conf = Configuration.defaultConfiguration().addOptions(Option.DEFAULT_PATH_LEAF_TO_NULL).addOptions(Option.SUPPRESS_EXCEPTIONS);
-
 
 	private Site site = Site.me().setDomain("rottentomatoes.com").setRetryTimes(5).setTimeOut(10000).setSleepTime(2000).setUserAgent(
 	            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.65 Safari/537.31");;
 	     
-	public RottenTomatoesMovieProcessor()  {
-		System.out.println("RottenTomatoesMovieProcessor init");
-	}
 	@Override
 	public void process(Page page) {
     	if (page.getUrl().get().matches(".*/m/[^/]+/?$")) {
@@ -59,16 +58,10 @@ public class RottenTomatoesMovieProcessor implements PageProcessor {
     		page.putField("runTime", page.getHtml().xpath("//div[@class='info']").$("div:containsOwn(Runtime) + div > time", "datetime").get());
     		processCast(page, ctx);
     		processRating(page, ctx);
-    	} else if (page.getUrl().regex(".*/search/\\?search.*").match()) {
-    		page.addTargetRequests(page.getHtml().xpath("//section[@id='SummaryResults']/ul/li[1]/div[@class='details']//a[contains(@href, '/m/')][1]").links().all());
+    	} else {
     		page.setSkip(true);
-    	} else if (page.getUrl().regex(".*/api/private/v1\\.0/search/.*").match()) {
-    		String path= JsonPath.using(conf).parse(page.getRawText()).read("$.movies[0].url");
-    		if (StringUtils.isNotBlank(path)) {
-    			page.addTargetRequest("https://www.rottentomatoes.com" + path);
-    		}
-    		page.setSkip(true);
-    	}
+    	} 
+    	page.addTargetRequests(page.getHtml().links().regex(".*www\\.rottentomatoes\\.com/.+").all());
 	}
 	
 	private String joinString(ReadContext ctx, String path) {
@@ -157,6 +150,14 @@ public class RottenTomatoesMovieProcessor implements PageProcessor {
 	@Override
 	public Site getSite() {
 		return site;
+	}
+	
+	public static void main(String[] args) {
+        Spider.create(new RottenTomatoesProcessor())
+		.addPipeline(new JsonFilePipeline("/Users/andy/Downloads"))
+		.addUrl("https://www.rottentomatoes.com/")
+		.thread(5)
+		.run();
 	}
 
 }
