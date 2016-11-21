@@ -8,7 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 
 public class DoubanAlbum implements Serializable {
 	private static final long serialVersionUID = -427341013997312958L;
-	
+	private Long albumId;
 	private String name;
 	private String performer;
 	private String genre;
@@ -20,6 +20,12 @@ public class DoubanAlbum implements Serializable {
 	private DoubanAlbumRating rating;
 	private String link;
 	
+	public Long getAlbumId() {
+		return albumId;
+	}
+	public void setAlbumId(Long albumId) {
+		this.albumId = albumId;
+	}
 	private Map<String, String> attrs = new HashMap<>();
 	
 	public String getLink() {
@@ -106,9 +112,9 @@ public class DoubanAlbum implements Serializable {
 	}
 	@Override
 	public String toString() {
-		return "DoubanAlbum [name=" + name + ", performer=" + performer + ", genre=" + genre + ", releaseTime="
-				+ releaseTime + ", publisher=" + publisher + ", cover=" + cover + ", intro=" + intro + ", tracks="
-				+ tracks + ", rating=" + rating + ", link=" + link + "]";
+		return "DoubanAlbum [albumId=" + albumId + ", name=" + name + ", performer=" + performer + ", genre=" + genre
+				+ ", releaseTime=" + releaseTime + ", publisher=" + publisher + ", cover=" + cover + ", intro=" + intro
+				+ ", tracks=" + tracks + ", rating=" + rating + ", link=" + link + ", attrs=" + attrs + "]";
 	}
 	
 	

@@ -55,6 +55,7 @@ public class RottenTomatoesSprider extends AbstractSpider<RTMovie, String> {
 		return "https://www.rottentomatoes.com/search/?search=" + conditions;
 	}
  
+	private By movieId = By.xpath("//meta[@name='movieID']");
 	private By summaryResult = By.xpath("//section[@id='SummaryResults']/ul/li/div[@class='details']//a[contains(@href, '/m/')]");
 	private By movieInfo = By.id("movieSynopsis");
 	private By jsonLdSchema = By.xpath("//script[@id='jsonLdSchema']");
@@ -87,6 +88,10 @@ public class RottenTomatoesSprider extends AbstractSpider<RTMovie, String> {
 		
 		WebElement movieInfoEle = getDriver().findElement(movieInfo);
 		movie.setSynopsis(movieInfoEle.getAttribute("innerText"));
+		
+		if (isElementPresent(movieId)) {
+			movie.setMovieId(Long.parseLong(getDriver().findElement(movieId).getAttribute("content")));
+		}
 		
 		if (isElementPresent(inTheaters)) {
 			WebElement inTheatersEle = getDriver().findElement(inTheaters);

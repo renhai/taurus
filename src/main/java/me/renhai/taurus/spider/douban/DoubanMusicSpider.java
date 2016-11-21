@@ -42,6 +42,7 @@ public class DoubanMusicSpider extends AbstractSpider<DoubanAlbum, String> {
 		LOG.info(result.getAttribute("title") + " " + getDriver().getCurrentUrl());
 		result.click();
 		
+		albumObj.setAlbumId(getAlbumId(getDriver().getCurrentUrl()));
 		albumObj.setLink(getDriver().getCurrentUrl());
 		if (isElementPresent(cover)) {
 			albumObj.setCover(getDriver().findElement(cover).getAttribute("href"));
@@ -55,6 +56,18 @@ public class DoubanMusicSpider extends AbstractSpider<DoubanAlbum, String> {
 		albumObj.setTracks(processTracks());
 		
 		return albumObj;
+	}
+	
+	private Long getAlbumId(String link) {
+		link = StringUtils.trimToEmpty(link);
+		link = StringUtils.removeEnd(link, "/");
+		if (StringUtils.isEmpty(link)) return null;
+		try {
+			return Long.parseLong(link.substring(link.lastIndexOf('/') + 1));
+		} catch (NumberFormatException e) {
+			LOG.error(e.getMessage(), e);
+		}
+		return null;
 	}
 	
 	private DoubanAlbumRating processRating() {

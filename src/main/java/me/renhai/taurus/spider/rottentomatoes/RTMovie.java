@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RTMovie {
+	private Long movieId;
 	private String link;
 	private String title;
 	private String synopsis;
@@ -21,6 +22,13 @@ public class RTMovie {
 	
 	private RTRating rating;
 	private List<RTCast> cast = new ArrayList<>();
+	
+	public Long getMovieId() {
+		return movieId;
+	}
+	public void setMovieId(Long movieId) {
+		this.movieId = movieId;
+	}
 	public String getLink() {
 		return link;
 	}
@@ -121,11 +129,11 @@ public class RTMovie {
 	}
 	@Override
 	public String toString() {
-		return "RTMovie [link=" + link + ", title=" + title + ", synopsis=" + synopsis + ", mpaaRating=" + mpaaRating
-				+ ", genres=" + genres + ", runtime=" + runtime + ", year=" + year + ", criticsConsensus="
-				+ criticsConsensus + ", inTheatersDate=" + inTheatersDate + ", onDvdDate=" + onDvdDate + ", studio="
-				+ studio + ", directedBy=" + directedBy + ", writtenBy=" + writtenBy + ", image=" + image + ", rating="
-				+ rating + ", cast=" + cast + "]";
+		return "RTMovie [movieId=" + movieId + ", link=" + link + ", title=" + title + ", synopsis=" + synopsis
+				+ ", mpaaRating=" + mpaaRating + ", genres=" + genres + ", runtime=" + runtime + ", year=" + year
+				+ ", criticsConsensus=" + criticsConsensus + ", inTheatersDate=" + inTheatersDate + ", onDvdDate="
+				+ onDvdDate + ", studio=" + studio + ", directedBy=" + directedBy + ", writtenBy=" + writtenBy
+				+ ", image=" + image + ", rating=" + rating + ", cast=" + cast + "]";
 	}
 	
 	

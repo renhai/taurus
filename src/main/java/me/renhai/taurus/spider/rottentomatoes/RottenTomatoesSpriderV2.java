@@ -1,6 +1,5 @@
 package me.renhai.taurus.spider.rottentomatoes;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
 
@@ -12,9 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import com.jayway.jsonpath.Configuration;
-import com.jayway.jsonpath.Option;
-
 import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.pipeline.ResultItemsCollectorPipeline;
@@ -22,7 +18,6 @@ import us.codecraft.webmagic.pipeline.ResultItemsCollectorPipeline;
 @Service
 public class RottenTomatoesSpriderV2 {
 	private static final Logger LOG = LoggerFactory.getLogger(RottenTomatoesSpriderV2.class);
-	private Configuration conf = Configuration.defaultConfiguration().addOptions(Option.DEFAULT_PATH_LEAF_TO_NULL).addOptions(Option.SUPPRESS_EXCEPTIONS);
 
 	@PostConstruct
 	private void init() {
@@ -41,20 +36,31 @@ public class RottenTomatoesSpriderV2 {
         		.addUrl(url)
         		.run();
         
-        RTMovie mv = new RTMovie();
+        RTMovie movie = new RTMovie();
         List<ResultItems> resultItemsList = pipline.getCollected();
         if (CollectionUtils.isEmpty(resultItemsList)) {
         	return null;
         }
         ResultItems items = resultItemsList.get(0);
-        String title = items.get("title");
-        String movieSynopsis = items.get("movieSynopsis");
-        String link = items.get("link");
-        mv.setTitle(title);
-        mv.setLink(link);
-        mv.setSynopsis(movieSynopsis);
-        return mv;
+        movie.setMovieId(Long.parseLong(items.get("movieId")));
+		movie.setTitle(items.get("title"));
+		movie.setDirectedBy(items.get("director"));
+		movie.setGenres(items.get("genre"));
+		movie.setWrittenBy(items.get("author"));
+		movie.setStudio(items.get("studio"));
+		movie.setYear(items.get("year"));
+		movie.setMpaaRating(items.get("mpaaRating"));
+		movie.setImage(items.get("image"));
+		
+        movie.setLink(items.get("link"));
+        movie.setSynopsis(items.get("movieSynopsis"));
+        movie.setInTheatersDate(items.get("inTheaters"));
+        movie.setOnDvdDate(items.get("onDvd"));
+        movie.setRuntime(items.get("runTime"));
+        movie.setCriticsConsensus(items.get("criticConsensus"));
+        movie.setCast(items.get("cast"));
+		movie.setRating(items.get("rating"));
+        return movie;
 	}
-	
 
 }
