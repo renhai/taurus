@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import me.renhai.taurus.interceptors.RateLimit;
 import me.renhai.taurus.spider.douban.DoubanAlbum;
 import me.renhai.taurus.spider.douban.DoubanMusicSpider;
 
@@ -24,6 +25,7 @@ public class DoubanMusicController {
 	@Autowired
 	private DoubanMusicSpider doubanMusicSpider;
 
+	@RateLimit(5)
     @GetMapping({"/1.0/albums"})
     public ResponseEntity<DoubanAlbum> albums(
     		@RequestParam(value = "q", required = true) String query) throws Exception {
