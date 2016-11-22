@@ -55,7 +55,7 @@ public class RottenTomatoesTaskController {
 		if (status == Status.Running) {
 			spider.stop();
 		} 
-		return new ResponseEntity<>("Stop is Stoped.", HttpStatus.OK);
+		return new ResponseEntity<>("Task is Stoped.", HttpStatus.OK);
 	}
 
 }

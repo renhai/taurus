@@ -22,8 +22,6 @@ import me.renhai.taurus.spider.rottentomatoes.RTCriticScore;
 import me.renhai.taurus.spider.rottentomatoes.RTRating;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
-import us.codecraft.webmagic.Spider;
-import us.codecraft.webmagic.pipeline.JsonFilePipeline;
 import us.codecraft.webmagic.processor.PageProcessor;
 import us.codecraft.webmagic.selector.HtmlNode;
 import us.codecraft.webmagic.selector.Selectable;
