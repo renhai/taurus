@@ -74,6 +74,9 @@ public class RottenTomatoesProcessor implements PageProcessor {
 				if (!StringUtils.contains(link, "www.rottentomatoes.com/")) {
 					continue;
 				}
+				if (StringUtils.contains(link, "www.rottentomatoes.com/tv/")) {
+					continue;
+				}
 				int index = StringUtils.indexOf(link, "#");
 				if (index != -1) {
 					link = StringUtils.substring(link, 0, index);
