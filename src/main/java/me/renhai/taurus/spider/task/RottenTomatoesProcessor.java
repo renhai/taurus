@@ -59,7 +59,19 @@ public class RottenTomatoesProcessor implements PageProcessor {
     	} else {
     		page.setSkip(true);
     	} 
-    	page.addTargetRequests(page.getHtml().links().regex(".*www\\.rottentomatoes\\.com/.+").all());
+    	List<String> links = page.getHtml().links().all();
+    	for (String link : links) {
+    		if (!StringUtils.contains(link, "www.rottentomatoes.com/")) {
+    			continue;
+    		}
+    		int index = StringUtils.indexOf(link, "#");
+    		if (index != -1) {
+    			link = StringUtils.substring(link, 0, index);
+    		}
+    		link = StringUtils.removeEnd(link, "/");
+    		page.addTargetRequest(link);
+    	}
+//    	page.addTargetRequests(page.getHtml().links().regex(".*www\\.rottentomatoes\\.com/.+").all());
 	}
 	
 	private String joinString(ReadContext ctx, String path) {
