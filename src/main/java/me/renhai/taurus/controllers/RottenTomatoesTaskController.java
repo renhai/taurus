@@ -1,7 +1,6 @@
 package me.renhai.taurus.controllers;
 
-import javax.annotation.PostConstruct;
-
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,42 +19,52 @@ public class RottenTomatoesTaskController {
 
 	private Spider spider;
 	
-	@PostConstruct
-	private void init() {
+	private void initSpider(String path, int threadNum) {
 		spider = Spider.create(new RottenTomatoesProcessor())
-		.addUrl("https://www.rottentomatoes.com/")
-		.thread(5);
+					   .addUrl("https://www.rottentomatoes.com/")
+					   .addPipeline(new JsonFilePipeline(path))
+					   .thread(threadNum);
 	}
 	
 	@GetMapping("/start")
 	public ResponseEntity<String> start(
-			@RequestParam (value = "path", required = true) String path,
+			@RequestParam (value = "path", defaultValue = "", required = false) String path,
 			@RequestParam (value = "thread", defaultValue = "5") int threadNum) throws Exception {
 		if (threadNum <= 0 || threadNum > 10) {
 			throw new IllegalArgumentException("thread number illegal");
 		}
-		if (spider.getStatus() == Status.Running) {
-			return new ResponseEntity<>("Task is runing, don't do this again.", HttpStatus.OK);
-		} else if (spider.getStatus() == Status.Stopped) {
+		if (spider == null) {
+			if (StringUtils.isBlank(path)) {
+				throw new IllegalArgumentException("path is empty.");
+			}
+			initSpider(path, threadNum);
+			spider.start();
+			return new ResponseEntity<>("Task is started Running.", HttpStatus.OK);
+		}
+		if (spider.getStatus() == Status.Stopped) {
 			spider.start();
 			return new ResponseEntity<>("Task is being restared.", HttpStatus.OK);
-		} else {
-			spider.clearPipeline()
-				  .addPipeline(new JsonFilePipeline(path))
-				  .thread(threadNum)
-				  .start();
-			return new ResponseEntity<>("Create Task Successfully", HttpStatus.OK);
 		}
-		
+		return new ResponseEntity<>("unsupported operation, don't do this again!", HttpStatus.OK);
 	}
 	
 	@GetMapping("/stop")
 	public ResponseEntity<String> stop() {
-		Status status = spider.getStatus();
-		if (status == Status.Running) {
+		if (spider != null && spider.getStatus() == Status.Running) {
 			spider.stop();
+		}
+		return new ResponseEntity<>("Task is being Stoped.", HttpStatus.OK);
+	}
+	
+	@GetMapping("/close")
+	public ResponseEntity<String> close() throws Exception {
+		if (spider != null) {
+			spider.stop();
+			Thread.sleep(5000);
+			spider.close();
+			spider = null;
 		} 
-		return new ResponseEntity<>("Task is Stoped.", HttpStatus.OK);
+		return new ResponseEntity<>("Task is being Closed.", HttpStatus.OK);
 	}
 
 }
