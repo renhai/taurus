@@ -19,6 +19,7 @@ public class RTMovie {
 	private String directedBy;
 	private String writtenBy;
 	private String image;
+	private Long timestamp;
 	
 	private RTRating rating;
 	private List<RTCast> cast = new ArrayList<>();
@@ -127,13 +128,20 @@ public class RTMovie {
 	public void setImage(String image) {
 		this.image = image;
 	}
+	
+	public Long getTimestamp() {
+		return timestamp;
+	}
+	public void setTimestamp(Long timestamp) {
+		this.timestamp = timestamp;
+	}
 	@Override
 	public String toString() {
 		return "RTMovie [movieId=" + movieId + ", link=" + link + ", title=" + title + ", synopsis=" + synopsis
 				+ ", mpaaRating=" + mpaaRating + ", genres=" + genres + ", runtime=" + runtime + ", year=" + year
 				+ ", criticsConsensus=" + criticsConsensus + ", inTheatersDate=" + inTheatersDate + ", onDvdDate="
 				+ onDvdDate + ", studio=" + studio + ", directedBy=" + directedBy + ", writtenBy=" + writtenBy
-				+ ", image=" + image + ", rating=" + rating + ", cast=" + cast + "]";
+				+ ", image=" + image + ", timestamp=" + timestamp + ", rating=" + rating + ", cast=" + cast + "]";
 	}
 	
 	

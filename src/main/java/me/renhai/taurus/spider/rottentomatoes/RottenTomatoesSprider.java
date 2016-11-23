@@ -124,6 +124,7 @@ public class RottenTomatoesSprider extends AbstractSpider<RTMovie, String> {
 		movie.setMpaaRating(ctx.read("$.contentRating"));
 		movie.setImage(ctx.read("$.image"));
 		movie.setRating(processRating(ctx));
+		movie.setTimestamp(System.currentTimeMillis());
 		return movie;
 	}
 	

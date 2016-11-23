@@ -61,6 +61,7 @@ public class RottenTomatoesSpriderV2 {
         movie.setCriticsConsensus(items.get("criticConsensus"));
         movie.setCast(items.get("cast"));
 		movie.setRating(items.get("rating"));
+		movie.setTimestamp(System.currentTimeMillis());
         return movie;
 	}
 

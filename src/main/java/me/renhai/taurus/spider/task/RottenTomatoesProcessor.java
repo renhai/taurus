@@ -63,6 +63,7 @@ public class RottenTomatoesProcessor implements PageProcessor {
 					.$("div:containsOwn(On DVD) + div > time", "datetime").get());
 			page.putField("runTime", page.getHtml().xpath("//div[@class='info']")
 					.$("div:containsOwn(Runtime) + div > time", "datetime").get());
+			page.putField("timestamp", System.currentTimeMillis());
 			processCast(page, ctx);
 			processRating(page, ctx);
 		} else {
