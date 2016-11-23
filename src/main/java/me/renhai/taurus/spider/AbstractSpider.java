@@ -10,6 +10,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.retry.annotation.Retryable;
 
 public abstract class AbstractSpider<T, C> {
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractSpider.class);
@@ -54,6 +55,21 @@ public abstract class AbstractSpider<T, C> {
 		return results.size() > 0;
 	}
 	
+	@Retryable(maxAttempts = 3, value = {RuntimeException.class})
+	public T search(C conditions) {
+		try {
+			String url = getUrl(conditions);
+			if (StringUtils.isBlank(url)) {
+				return null;
+			}
+			getDriver().get(url);
+			T res = process(conditions);
+			return res;
+		} finally {
+			quitDriver();
+		}
+	}
+	/**
 	public T search(C conditions) {
 		int count = 0;
 		while (true) {
@@ -75,6 +91,7 @@ public abstract class AbstractSpider<T, C> {
 			} 
 		}
 	}
+	*/
 	
 	abstract protected T process(C conditions);
 	
