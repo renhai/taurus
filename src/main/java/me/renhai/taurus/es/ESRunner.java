@@ -17,7 +17,7 @@ public class ESRunner implements CommandLineRunner {
 	private static final Logger LOG = LoggerFactory.getLogger(ESRunner.class);
 
 	@Autowired
-	private MovieRepository movieRepository;
+	private MovieDocRepository movieRepository;
 	
 	@Override
 	public void run(String... args) throws Exception {

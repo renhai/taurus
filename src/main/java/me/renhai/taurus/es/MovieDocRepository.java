@@ -4,6 +4,6 @@ import java.util.List;
 
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
-public interface MovieRepository extends ElasticsearchRepository<MovieDoc, String> {
+public interface MovieDocRepository extends ElasticsearchRepository<MovieDoc, String> {
 	List<MovieDoc> findByName(String name);
 }

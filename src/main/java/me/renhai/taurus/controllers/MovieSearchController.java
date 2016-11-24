@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import me.renhai.taurus.es.MovieDoc;
-import me.renhai.taurus.es.MovieRepository;
+import me.renhai.taurus.es.MovieDocRepository;
 
 @RestController
 @RequestMapping("/api/search")
@@ -27,7 +27,7 @@ public class MovieSearchController {
 	private static final Logger LOG = LoggerFactory.getLogger(MovieSearchController.class);
 	
 	@Autowired
-	private MovieRepository movieRepository;
+	private MovieDocRepository movieRepository;
 	
 	@Autowired
 	private ElasticsearchTemplate elasticsearchTemplate;
