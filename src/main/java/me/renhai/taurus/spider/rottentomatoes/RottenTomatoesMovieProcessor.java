@@ -42,9 +42,9 @@ public class RottenTomatoesMovieProcessor implements PageProcessor {
     		ReadContext ctx = JsonPath.parse(json, conf);
     		page.putField("movieId", page.getHtml().$("meta[name=movieID]", "content").get());
     		page.putField("title", ctx.read("$.name"));
-    		page.putField("director", joinString(ctx, "$.director[*]name"));
+    		page.putField("director", ctx.read("$.director"));
+    		page.putField("author", ctx.read("$.author"));
     		page.putField("genre", joinString(ctx, "$.genre"));
-    		page.putField("author", joinString(ctx, "$.author[*].name"));
     		page.putField("studio", ctx.read("$.productionCompany.name"));
     		page.putField("year", ctx.read("$.datePublished"));
     		page.putField("mpaaRating", ctx.read("$.contentRating"));
@@ -78,15 +78,14 @@ public class RottenTomatoesMovieProcessor implements PageProcessor {
 	private void processRating(Page page, ReadContext ctx) {
 		RTRating res = new RTRating();
 		NumberFormat nf = NumberFormat.getInstance(Locale.US);
-		RTCriticScore cs = new RTCriticScore();
-		cs.setMeterValue(ctx.read("$.aggregateRating.ratingValue"));
-		cs.setReviewsCounted(ctx.read("$.aggregateRating.reviewCount"));
+		res.setCriticRatingValue(ctx.read("$.aggregateRating.ratingValue"));
+		res.setCriticReviewsCounted(ctx.read("$.aggregateRating.reviewCount"));
 		
 		Selectable scoreStats = page.getHtml().xpath("//div[@id='scoreStats']");
 		String criticFresh = scoreStats.$("span:containsOwn(Fresh:) + span", "text").get();
 		if (StringUtils.isNotBlank(criticFresh)) {
 			try {
-				cs.setFresh(nf.parse(criticFresh).intValue());
+				res.setCriticFresh(nf.parse(criticFresh).intValue());
 			} catch (ParseException e) {
 				LOG.error(e.getMessage());
 			}
@@ -94,7 +93,7 @@ public class RottenTomatoesMovieProcessor implements PageProcessor {
 		String criticRotten = scoreStats.$("span:containsOwn(Rotten:) + span", "text").get();
 		if (StringUtils.isNotBlank(criticRotten)) {
 			try {
-				cs.setRotten(nf.parse(criticRotten).intValue());
+				res.setCriticRotten(nf.parse(criticRotten).intValue());
 			} catch (ParseException e) {
 				LOG.error(e.getMessage());
 			}
@@ -102,31 +101,27 @@ public class RottenTomatoesMovieProcessor implements PageProcessor {
 
 		String criticAvg = scoreStats.$("div > div:contains(Average Rating:)", "text").get();
 		criticAvg = StringUtils.removeStart(criticAvg, "Average Rating:");
-		cs.setAverageRating(StringUtils.trimToNull(criticAvg));
-		res.setCriticScore(cs);
-		
-		RTAudienceScore as = new RTAudienceScore();
+		res.setCriticAverageRating(StringUtils.trimToNull(criticAvg));
 		
 		String audienceRate = page.getHtml().$("div#scorePanel a[href*=audience_reviews] div[class*=meter-value] > span", "text").get();
 		if (StringUtils.isNotBlank(audienceRate)) {
-			as.setMeterValue(Integer.parseInt(StringUtils.removeEnd(StringUtils.trimToEmpty(audienceRate), "%")));
+			res.setAudienceRatingValue(Integer.parseInt(StringUtils.removeEnd(StringUtils.trimToEmpty(audienceRate), "%")));
 		}
 
 		String audienceAvg = page.getHtml().$("div[class*=audiencepanel] div[class*=audience-info] > div:contains(Average Rating:)", "text").get();
 		audienceAvg = StringUtils.removeStart(audienceAvg, "Average Rating:");
-		as.setAverageRating(StringUtils.trimToEmpty(audienceAvg));
+		res.setAudienceAverageRating(StringUtils.trimToEmpty(audienceAvg));
 		
 		
 		String audienceUserRating = page.getHtml().$("div[class*=audiencepanel] div[class*=audience-info] > div:contains(User Ratings:)", "text").get();
 		if (StringUtils.isNotBlank(audienceUserRating)) {
 			audienceUserRating = StringUtils.trimToEmpty(StringUtils.removeStart(audienceUserRating, "User Ratings:"));
 			try {
-				as.setUserRatings(nf.parse(audienceUserRating).intValue());
+				res.setAudienceRatingCount(nf.parse(audienceUserRating).intValue());
 			} catch (ParseException e) {
 				LOG.error(e.getMessage());
 			} 
 		}
-		res.setAudienceScore(as);
 		page.putField("rating", res);
 	}
 	
@@ -142,6 +137,7 @@ public class RottenTomatoesMovieProcessor implements PageProcessor {
 			cast.setName((String)actor.get("name"));
 			cast.setImage((String)actor.get("image"));
 			cast.setLink((String)actor.get("sameAs"));
+			cast.setType((String)actor.get("@type"));
 			
 			if (characters.size() == actors.size()) {
 				cast.setCharacters(characters.get(i));

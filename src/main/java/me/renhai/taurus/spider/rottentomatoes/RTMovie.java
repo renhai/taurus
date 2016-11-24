@@ -3,6 +3,8 @@ package me.renhai.taurus.spider.rottentomatoes;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minidev.json.JSONArray;
+
 public class RTMovie {
 	private Long movieId;
 	private String link;
@@ -12,12 +14,11 @@ public class RTMovie {
 	private String genres;
 	private String runtime;
 	private Integer year;
-	private String criticsConsensus;
 	private String inTheatersDate;
 	private String onDvdDate;
 	private String studio;
-	private String directedBy;
-	private String writtenBy;
+	private JSONArray directors;
+	private JSONArray authors;
 	private String image;
 	private Long timestamp;
 	
@@ -66,12 +67,7 @@ public class RTMovie {
 	public void setRuntime(String runtime) {
 		this.runtime = runtime;
 	}
-	public String getCriticsConsensus() {
-		return criticsConsensus;
-	}
-	public void setCriticsConsensus(String criticsConsensus) {
-		this.criticsConsensus = criticsConsensus;
-	}
+
 	public String getInTheatersDate() {
 		return inTheatersDate;
 	}
@@ -90,18 +86,7 @@ public class RTMovie {
 	public void setStudio(String studio) {
 		this.studio = studio;
 	}
-	public String getDirectedBy() {
-		return directedBy;
-	}
-	public void setDirectedBy(String directedBy) {
-		this.directedBy = directedBy;
-	}
-	public String getWrittenBy() {
-		return writtenBy;
-	}
-	public void setWrittenBy(String writtenBy) {
-		this.writtenBy = writtenBy;
-	}
+
 	public RTRating getRating() {
 		return rating;
 	}
@@ -135,13 +120,25 @@ public class RTMovie {
 	public void setTimestamp(Long timestamp) {
 		this.timestamp = timestamp;
 	}
+	public JSONArray getDirectors() {
+		return directors;
+	}
+	public void setDirectors(JSONArray directors) {
+		this.directors = directors;
+	}
+	public JSONArray getAuthors() {
+		return authors;
+	}
+	public void setAuthors(JSONArray authors) {
+		this.authors = authors;
+	}
 	@Override
 	public String toString() {
 		return "RTMovie [movieId=" + movieId + ", link=" + link + ", title=" + title + ", synopsis=" + synopsis
 				+ ", mpaaRating=" + mpaaRating + ", genres=" + genres + ", runtime=" + runtime + ", year=" + year
-				+ ", criticsConsensus=" + criticsConsensus + ", inTheatersDate=" + inTheatersDate + ", onDvdDate="
-				+ onDvdDate + ", studio=" + studio + ", directedBy=" + directedBy + ", writtenBy=" + writtenBy
-				+ ", image=" + image + ", timestamp=" + timestamp + ", rating=" + rating + ", cast=" + cast + "]";
+				+ ", inTheatersDate=" + inTheatersDate + ", onDvdDate=" + onDvdDate + ", studio=" + studio
+				+ ", directors=" + directors + ", authors=" + authors + ", image=" + image + ", timestamp=" + timestamp
+				+ ", rating=" + rating + ", cast=" + cast + "]";
 	}
 	
 	

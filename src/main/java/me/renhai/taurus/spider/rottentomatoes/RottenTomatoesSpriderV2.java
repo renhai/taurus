@@ -45,9 +45,9 @@ public class RottenTomatoesSpriderV2 {
         ResultItems items = resultItemsList.get(0);
         movie.setMovieId(Long.parseLong(items.get("movieId")));
 		movie.setTitle(items.get("title"));
-		movie.setDirectedBy(items.get("director"));
+		movie.setDirectors(items.<net.minidev.json.JSONArray>get("director"));
+		movie.setAuthors(items.<net.minidev.json.JSONArray>get("author"));
 		movie.setGenres(items.get("genre"));
-		movie.setWrittenBy(items.get("author"));
 		movie.setStudio(items.get("studio"));
 		movie.setYear(items.get("year"));
 		movie.setMpaaRating(items.get("mpaaRating"));
@@ -58,7 +58,6 @@ public class RottenTomatoesSpriderV2 {
         movie.setInTheatersDate(items.get("inTheaters"));
         movie.setOnDvdDate(items.get("onDvd"));
         movie.setRuntime(items.get("runTime"));
-        movie.setCriticsConsensus(items.get("criticConsensus"));
         movie.setCast(items.get("cast"));
 		movie.setRating(items.get("rating"));
 		movie.setTimestamp(System.currentTimeMillis());

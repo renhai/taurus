@@ -6,8 +6,21 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.Lob;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
+@Table(
+indexes = {
+	@Index (columnList = "year"),
+	@Index (columnList = "title")
+}, 
+uniqueConstraints = {
+	@UniqueConstraint(columnNames = {"outerId", "source"}),
+	@UniqueConstraint(columnNames = {"link"})
+})
 public class Movie {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -16,6 +29,7 @@ public class Movie {
 	private Integer source;
 	private String link;
 	private String title;
+	@Lob
 	private String synopsis;
 	private String mpaaRating;
 	private String genres;

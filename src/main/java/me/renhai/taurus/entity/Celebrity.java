@@ -6,20 +6,33 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.Lob;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
+@Table(
+indexes = {
+	@Index (columnList = "name")
+}, 
+uniqueConstraints = {
+	@UniqueConstraint(columnNames = {"actorId", "source"}),
+	@UniqueConstraint(columnNames = {"link"})
+})
 @Entity
 public class Celebrity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
-	private Integer source;
 	private String actorId;
+	private Integer source;
 	private String type;
 	private String name;
 	private String link;
 	private String image;
 	private Date birthday;
 	private String birthplace;
+	@Lob
 	private String bio;
 	
 	public Integer getId() {

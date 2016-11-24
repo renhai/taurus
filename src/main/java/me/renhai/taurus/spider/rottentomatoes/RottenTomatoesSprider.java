@@ -105,19 +105,16 @@ public class RottenTomatoesSprider extends AbstractSpider<RTMovie, String> {
 			WebElement runTimeEle = getDriver().findElement(runTime);
 			movie.setRuntime(runTimeEle.getAttribute("datetime"));
 		}
-		if (isElementPresent(criticConsensus)) {
-			WebElement criticConsensusEle = getDriver().findElement(criticConsensus);
-			movie.setCriticsConsensus(criticConsensusEle.getAttribute("innerText"));
-		}
+
 
 		WebElement script = getDriver().findElement(jsonLdSchema);
 		String json = script.getAttribute("innerText");
 		LOG.info(json);
 		ReadContext ctx = JsonPath.parse(json, conf);
 		movie.setTitle(ctx.read("$.name"));
-		movie.setDirectedBy(joinString(ctx, "$.director[*]name"));
+		movie.setDirectors(ctx.read("$.director"));
 		movie.setGenres(joinString(ctx, "$.genre"));
-		movie.setWrittenBy(joinString(ctx, "$.author[*].name"));
+		movie.setAuthors(ctx.read("$.author"));
 		movie.setStudio(ctx.read("$.productionCompany.name"));
 		movie.setYear(ctx.read("$.datePublished"));
 		movie.setCast(processCast(ctx));
@@ -131,19 +128,18 @@ public class RottenTomatoesSprider extends AbstractSpider<RTMovie, String> {
 	private RTRating processRating(ReadContext ctx) {
 		RTRating res = new RTRating();
 		NumberFormat nf = NumberFormat.getInstance(Locale.US);
-		RTCriticScore cs = new RTCriticScore();
-		cs.setMeterValue(ctx.read("$.aggregateRating.ratingValue"));
-		cs.setReviewsCounted(ctx.read("$.aggregateRating.reviewCount"));
+		res.setCriticRatingValue(ctx.read("$.aggregateRating.ratingValue"));
+		res.setCriticReviewsCounted(ctx.read("$.aggregateRating.reviewCount"));
 		if (isElementPresent(criticFresh)) {
 			try {
-				cs.setFresh(nf.parse(getDriver().findElement(criticFresh).getAttribute("innerText")).intValue());
+				res.setCriticFresh(nf.parse(getDriver().findElement(criticFresh).getAttribute("innerText")).intValue());
 			} catch (ParseException e) {
 				LOG.error(e.getMessage());
 			}
 		}
 		if (isElementPresent(criticRotten)) {
 			try {
-				cs.setRotten(nf.parse(getDriver().findElement(criticRotten).getAttribute("innerText")).intValue());
+				res.setCriticRotten(nf.parse(getDriver().findElement(criticRotten).getAttribute("innerText")).intValue());
 			} catch (ParseException e) {
 				LOG.error(e.getMessage());
 			}
@@ -151,30 +147,31 @@ public class RottenTomatoesSprider extends AbstractSpider<RTMovie, String> {
 		if (isElementPresent(criticAvg)) {
 			String avg = getDriver().findElement(criticAvg).getAttribute("innerText");
 			avg = StringUtils.removeStart(avg, "Average Rating:");
-			cs.setAverageRating(StringUtils.trimToEmpty(avg));
+			res.setAudienceAverageRating(StringUtils.trimToEmpty(avg));
 		}
-		res.setCriticScore(cs);
 		
-		RTAudienceScore as = new RTAudienceScore();
 		if (isElementPresent(audienceRate)) {
 			String meterValue = getDriver().findElement(audienceRate).getAttribute("innerText");
-			as.setMeterValue(Integer.parseInt(StringUtils.removeEnd(StringUtils.trimToEmpty(meterValue), "%")));
+			res.setAudienceRatingValue(Integer.parseInt(StringUtils.removeEnd(StringUtils.trimToEmpty(meterValue), "%")));
 		}
 		if (isElementPresent(audienceAvg)) {
 			String avg = getDriver().findElement(audienceAvg).getAttribute("innerText");
 			avg = StringUtils.removeStart(avg, "Average Rating:");
-			as.setAverageRating(StringUtils.trimToEmpty(avg));
+			res.setAudienceAverageRating(StringUtils.trimToEmpty(avg));
 		}
 		if (isElementPresent(audienceUserRating)) {
 			String userRating = getDriver().findElement(audienceUserRating).getAttribute("innerText");
 			userRating = StringUtils.trimToEmpty(StringUtils.removeStart(userRating, "User Ratings:"));
 			try {
-				as.setUserRatings(nf.parse(userRating).intValue());
+				res.setAudienceRatingCount(nf.parse(userRating).intValue());
 			} catch (ParseException e) {
 				LOG.error(e.getMessage());
 			}
 		}
-		res.setAudienceScore(as);
+		if (isElementPresent(criticConsensus)) {
+			WebElement criticConsensusEle = getDriver().findElement(criticConsensus);
+			res.setCriticsConsensus(criticConsensusEle.getAttribute("innerText"));
+		}
 		return res;
 	}
 
@@ -189,6 +186,8 @@ public class RottenTomatoesSprider extends AbstractSpider<RTMovie, String> {
 			cast.setName((String)actor.get("name"));
 			cast.setImage((String)actor.get("image"));
 			cast.setLink((String)actor.get("sameAs"));
+			cast.setType((String)actor.get("@type"));
+
 			if (characters.size() == actors.size()) {
 				cast.setCharacters(characters.get(i));
 			} else {

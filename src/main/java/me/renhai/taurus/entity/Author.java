@@ -12,6 +12,7 @@ public class Author {
 	private Integer id;
 	private Integer celebrityId;
 	private Integer movieid;
+	private Long createTime;
 	
 	public Integer getId() {
 		return id;
@@ -31,9 +32,17 @@ public class Author {
 	public void setMovieid(Integer movieid) {
 		this.movieid = movieid;
 	}
+	
+	public Long getCreateTime() {
+		return createTime;
+	}
+	public void setCreateTime(Long createTime) {
+		this.createTime = createTime;
+	}
 	@Override
 	public String toString() {
-		return "Author [id=" + id + ", celebrityId=" + celebrityId + ", movieid=" + movieid + "]";
+		return "Author [id=" + id + ", celebrityId=" + celebrityId + ", movieid=" + movieid + ", createTime="
+				+ createTime + "]";
 	}
 	
 }
