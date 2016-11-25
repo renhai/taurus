@@ -1,9 +1,12 @@
 package me.renhai.taurus.repository;
 
-import org.springframework.data.repository.CrudRepository;
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import me.renhai.taurus.entity.Casting;
 
-public interface CastingRepository extends CrudRepository<Casting, Integer> {
-
+public interface CastingRepository extends JpaRepository<Casting, Integer> {
+	List<Casting> findByMovieId(Integer movieId);
+	void deleteByMovieId(Integer movieId);
 }

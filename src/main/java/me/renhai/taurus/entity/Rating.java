@@ -1,16 +1,24 @@
 package me.renhai.taurus.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
+@Table(
+uniqueConstraints = {
+	@UniqueConstraint(columnNames = {"movieId"})
+})
 public class Rating {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 	private Integer movieId;
+	@Column(length = 1024)
 	private String criticsConsensus;
 	
 	private Integer criticRatingValue;

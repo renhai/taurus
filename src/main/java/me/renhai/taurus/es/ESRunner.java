@@ -22,7 +22,7 @@ public class ESRunner implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		movieRepository.deleteAll();
-		Iterator<File> iter = FileUtils.iterateFiles(new File("/Users/andy/Downloads/rottentomatoes.com 1121"), new String[] {"json"}, false);
+		Iterator<File> iter = FileUtils.iterateFiles(new File("/Users/andy/Downloads/rottentomatoes.com.1124"), new String[] {"json"}, false);
 		while (iter.hasNext()) {
 			File file = iter.next();
 			String text = FileUtils.readFileToString(file, "utf-8");

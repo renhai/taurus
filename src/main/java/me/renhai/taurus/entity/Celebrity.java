@@ -16,7 +16,6 @@ indexes = {
 	@Index (columnList = "name")
 }, 
 uniqueConstraints = {
-	@UniqueConstraint(columnNames = {"actorId", "source"}),
 	@UniqueConstraint(columnNames = {"link"})
 })
 @Entity

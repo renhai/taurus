@@ -4,14 +4,20 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.Table;
 
 @Entity
+@Table(
+indexes = {
+	@Index (columnList = "movieId")
+})
 public class Author {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 	private Integer celebrityId;
-	private Integer movieid;
+	private Integer movieId;
 	private Long createTime;
 	
 	public Integer getId() {
@@ -26,13 +32,13 @@ public class Author {
 	public void setCelebrityId(Integer celebrityId) {
 		this.celebrityId = celebrityId;
 	}
-	public Integer getMovieid() {
-		return movieid;
-	}
-	public void setMovieid(Integer movieid) {
-		this.movieid = movieid;
-	}
 	
+	public Integer getMovieId() {
+		return movieId;
+	}
+	public void setMovieId(Integer movieId) {
+		this.movieId = movieId;
+	}
 	public Long getCreateTime() {
 		return createTime;
 	}
@@ -41,7 +47,7 @@ public class Author {
 	}
 	@Override
 	public String toString() {
-		return "Author [id=" + id + ", celebrityId=" + celebrityId + ", movieid=" + movieid + ", createTime="
+		return "Author [id=" + id + ", celebrityId=" + celebrityId + ", movieId=" + movieId + ", createTime="
 				+ createTime + "]";
 	}
 	

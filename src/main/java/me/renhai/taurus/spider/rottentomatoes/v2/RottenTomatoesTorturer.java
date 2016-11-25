@@ -40,11 +40,11 @@ public class RottenTomatoesTorturer {
 		page.putField("image", ctx.read("$.image"));
 		
 		page.putField("link", page.getUrl().toString());
-		page.putField("criticConsensus", page.getHtml().xpath("//div[@id='all-critics-numbers']//p[@class='critic_consensus superPageFontColor']/allText()").get());
 		page.putField("movieSynopsis", page.getHtml().xpath("//div[@id='movieSynopsis']/text()").get());
 		page.putField("inTheaters", page.getHtml().xpath("//div[@class='info']").$("div:containsOwn(In Theaters) + div > time", "datetime").get());
 		page.putField("onDvd", page.getHtml().xpath("//div[@class='info']").$("div:containsOwn(On DVD) + div > time", "datetime").get());
 		page.putField("runTime", page.getHtml().xpath("//div[@class='info']").$("div:containsOwn(Runtime) + div > time", "datetime").get());
+		page.putField("timestamp", System.currentTimeMillis());
 		processCast(page, ctx);
 		processRating(page, ctx);	
 	}
@@ -101,6 +101,7 @@ public class RottenTomatoesTorturer {
 				LOG.error(e.getMessage());
 			} 
 		}
+		res.setCriticsConsensus(page.getHtml().xpath("//div[@id='all-critics-numbers']//p[@class='critic_consensus superPageFontColor']/allText()").get());
 		page.putField("rating", res);
 	}
 	

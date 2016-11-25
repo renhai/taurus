@@ -22,6 +22,18 @@ uniqueConstraints = {
 	@UniqueConstraint(columnNames = {"link"})
 })
 public class Movie {
+	public enum Source {
+		ROTTEN_TOMATOES(1),	
+		IMDB(2);
+		
+		private int code;
+		Source(int code) {
+			this.code = code;
+		}
+		public int getCode() {
+			return code;
+		}
+	} 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
@@ -33,7 +45,7 @@ public class Movie {
 	private String synopsis;
 	private String mpaaRating;
 	private String genres;
-	private String runtime;
+	private Integer runtime;
 	private Integer year;
 	private Date inTheatersDate;
 	private Date onDvdDate;
@@ -88,10 +100,10 @@ public class Movie {
 	public void setGenres(String genres) {
 		this.genres = genres;
 	}
-	public String getRuntime() {
+	public Integer getRuntime() {
 		return runtime;
 	}
-	public void setRuntime(String runtime) {
+	public void setRuntime(Integer runtime) {
 		this.runtime = runtime;
 	}
 	public Integer getYear() {
