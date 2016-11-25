@@ -10,7 +10,6 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
@@ -23,12 +22,11 @@ import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.selector.HtmlNode;
 import us.codecraft.webmagic.selector.Selectable;
 
-@Component
 public class RottenTomatoesTorturer {
-	private Configuration conf = Configuration.defaultConfiguration().addOptions(Option.DEFAULT_PATH_LEAF_TO_NULL).addOptions(Option.SUPPRESS_EXCEPTIONS);
+	private static Configuration conf = Configuration.defaultConfiguration().addOptions(Option.DEFAULT_PATH_LEAF_TO_NULL).addOptions(Option.SUPPRESS_EXCEPTIONS);
 	private static final Logger LOG = LoggerFactory.getLogger(RottenTomatoesTorturer.class);
 
-	public void torturePage(Page page) {
+	public static void torturePage(Page page) {
 		String json = page.getHtml().xpath("//script[@id='jsonLdSchema']/html()").get();
 		ReadContext ctx = JsonPath.parse(json, conf);
 		page.putField("movieId", page.getHtml().$("meta[name=movieID]", "content").get());
@@ -51,12 +49,12 @@ public class RottenTomatoesTorturer {
 		processRating(page, ctx);	
 	}
 	
-	private String joinString(ReadContext ctx, String path) {
+	private static String joinString(ReadContext ctx, String path) {
 		List<String> names = ctx.read(path);
 		return StringUtils.join(names, ",");
 	}
 	
-	private void processRating(Page page, ReadContext ctx) {
+	private static void processRating(Page page, ReadContext ctx) {
 		RTRating res = new RTRating();
 		NumberFormat nf = NumberFormat.getInstance(Locale.US);
 		res.setCriticRatingValue(ctx.read("$.aggregateRating.ratingValue"));
@@ -106,7 +104,7 @@ public class RottenTomatoesTorturer {
 		page.putField("rating", res);
 	}
 	
-	private void processCast(Page page, ReadContext ctx) {
+	private static void processCast(Page page, ReadContext ctx) {
 		List<RTCast> res = new ArrayList<>();
 		@SuppressWarnings("unchecked")
 		List<Map<String, Object>> actors = ctx.read("$.actors", List.class);
