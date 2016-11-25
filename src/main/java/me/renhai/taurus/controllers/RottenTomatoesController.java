@@ -11,25 +11,25 @@ import org.springframework.web.bind.annotation.RestController;
 
 import me.renhai.taurus.interceptors.RateLimit;
 import me.renhai.taurus.spider.rottentomatoes.RTMovie;
-import me.renhai.taurus.spider.rottentomatoes.RottenTomatoesSprider;
-import me.renhai.taurus.spider.rottentomatoes.RottenTomatoesSpriderV2;
+import me.renhai.taurus.spider.rottentomatoes.RottenTomatoesSpider;
+import me.renhai.taurus.spider.rottentomatoes.v2.RottenTomatoesSpiderV2;
 
 @RestController
 @RequestMapping("/api/rt")
 public class RottenTomatoesController {
 
 	@Autowired
-	private RottenTomatoesSpriderV2 rottenTomatoesSpriderV2;
+	private RottenTomatoesSpiderV2 rottenTomatoesSpiderV2;
 	
 	@Autowired
-	private RottenTomatoesSprider rottenTomatoesSprider;
+	private RottenTomatoesSpider rottenTomatoesSpider;
 	
 	@RateLimit(5)
 	@GetMapping("/1.0/movies")
 	public ResponseEntity<RTMovie> movies(
 			@RequestParam (value = "q", required = true) String query) throws Exception {
 		query = StringUtils.trimToEmpty(query);
-		RTMovie movie = rottenTomatoesSprider.search(query);
+		RTMovie movie = rottenTomatoesSpider.search(query);
 		return new ResponseEntity<RTMovie>(movie, HttpStatus.OK);
 	}
 	
@@ -38,13 +38,8 @@ public class RottenTomatoesController {
 	public ResponseEntity<RTMovie> moviesV2(
 			@RequestParam (value = "q", required = true) String query) throws Exception {
 		query = StringUtils.trimToEmpty(query);
-		RTMovie movie = rottenTomatoesSpriderV2.search(query);
+		RTMovie movie = rottenTomatoesSpiderV2.search(query);
 		return new ResponseEntity<RTMovie>(movie, HttpStatus.OK);
 	}
 	
-	@GetMapping("test")
-	public ResponseEntity<String> test() throws Exception {
-		Thread.sleep(5000);
-		return new ResponseEntity<>("This is an test message.", HttpStatus.OK);
-	}
 }

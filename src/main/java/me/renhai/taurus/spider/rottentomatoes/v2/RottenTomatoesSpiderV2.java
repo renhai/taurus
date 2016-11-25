@@ -1,4 +1,4 @@
-package me.renhai.taurus.spider.rottentomatoes;
+package me.renhai.taurus.spider.rottentomatoes.v2;
 
 import java.net.URLEncoder;
 import java.util.List;
@@ -11,13 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import me.renhai.taurus.spider.rottentomatoes.RTMovie;
 import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.pipeline.ResultItemsCollectorPipeline;
 
 @Service
-public class RottenTomatoesSpriderV2 {
-	private static final Logger LOG = LoggerFactory.getLogger(RottenTomatoesSpriderV2.class);
+public class RottenTomatoesSpiderV2 {
+	private static final Logger LOG = LoggerFactory.getLogger(RottenTomatoesSpiderV2.class);
 
 	@PostConstruct
 	private void init() {

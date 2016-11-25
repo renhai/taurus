@@ -25,8 +25,8 @@ import com.jayway.jsonpath.ReadContext;
 import me.renhai.taurus.spider.AbstractSpider;
 
 @Service
-public class RottenTomatoesSprider extends AbstractSpider<RTMovie, String> {
-	private static final Logger LOG = LoggerFactory.getLogger(RottenTomatoesSprider.class);
+public class RottenTomatoesSpider extends AbstractSpider<RTMovie, String> {
+	private static final Logger LOG = LoggerFactory.getLogger(RottenTomatoesSpider.class);
 	private Configuration conf = Configuration.defaultConfiguration().addOptions(Option.DEFAULT_PATH_LEAF_TO_NULL).addOptions(Option.SUPPRESS_EXCEPTIONS);
 
 	@PostConstruct
