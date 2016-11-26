@@ -34,7 +34,7 @@ public class MovieDataInitializer implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		LOG.info("start importing data...");
-		importData();
+//		importData();
 		LOG.info("finish importing data.");
 	}
 	
