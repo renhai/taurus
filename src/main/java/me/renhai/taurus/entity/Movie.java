@@ -1,27 +1,62 @@
 package me.renhai.taurus.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Lob;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
+
+import org.apache.lucene.analysis.core.LowerCaseFilterFactory;
+import org.apache.lucene.analysis.snowball.SnowballPorterFilterFactory;
+import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
+import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.Analyzer;
+import org.hibernate.search.annotations.AnalyzerDef;
+import org.hibernate.search.annotations.AnalyzerDefs;
+import org.hibernate.search.annotations.Boost;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.Parameter;
+import org.hibernate.search.annotations.Store;
+import org.hibernate.search.annotations.TokenFilterDef;
+import org.hibernate.search.annotations.TokenizerDef;
 
 @Entity
 @Table(
 indexes = {
-	@Index (columnList = "year"),
-	@Index (columnList = "title")
+	@Index (name = "idx_year", columnList = "year"),
+	@Index (name = "idx_title", columnList = "title")
 }, 
 uniqueConstraints = {
-	@UniqueConstraint(columnNames = {"outerId", "source"}),
-	@UniqueConstraint(columnNames = {"link"})
+	@UniqueConstraint(name = "uk_outerid_source", columnNames = {"outerId", "source"}),
+	@UniqueConstraint(name = "uk_link", columnNames = {"link"})
 })
-public class Movie {
+@Indexed
+@AnalyzerDefs(
+		@AnalyzerDef(
+				name = "en", 
+				tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class), 
+				filters = {
+						@TokenFilterDef(factory = LowerCaseFilterFactory.class),
+						@TokenFilterDef(factory = SnowballPorterFilterFactory.class, params = {@Parameter(name = "language", value = "English") }), 
+//						@TokenFilterDef(factory = NGramFilterFactory.class, params = {@Parameter(name = "minGramSize", value = "3"), @Parameter(name = "maxGramSize", value = "3")}), 
+						})
+		)
+public class Movie implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2563824754979383249L;
+	
 	public enum Source {
 		ROTTEN_TOMATOES(1),	
 		IMDB(2);
@@ -37,12 +72,26 @@ public class Movie {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
+	
+	@NotNull
 	private String outerId;
+	
+	@NotNull
 	private Integer source;
+	
 	private String link;
+	
+	@Field(index = org.hibernate.search.annotations.Index.YES, store = Store.NO, analyze = Analyze.YES)
+	@Analyzer(definition = "en")
+	@NotNull
+	@Boost(2.0f)
 	private String title;
+	
 	@Lob
+	@Field
+	@Analyzer(definition = "en")
 	private String synopsis;
+	
 	private String mpaaRating;
 	private String genres;
 	private Integer runtime;
@@ -52,6 +101,12 @@ public class Movie {
 	private String studio;
 	private String image;
 	private Long timestamp;
+	private Long createTime;
+	private Long updateTime;
+	
+	@OneToOne(cascade = CascadeType.ALL, mappedBy = "movie")
+	private Rating rating;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -142,13 +197,25 @@ public class Movie {
 	public void setTimestamp(Long timestamp) {
 		this.timestamp = timestamp;
 	}
-	@Override
-	public String toString() {
-		return "Movie [id=" + id + ", outerId=" + outerId + ", source=" + source + ", link=" + link + ", title=" + title
-				+ ", synopsis=" + synopsis + ", mpaaRating=" + mpaaRating + ", genres=" + genres + ", runtime="
-				+ runtime + ", year=" + year + ", inTheatersDate=" + inTheatersDate + ", onDvdDate=" + onDvdDate
-				+ ", studio=" + studio + ", image=" + image + ", timestamp=" + timestamp + "]";
+	
+	public Long getCreateTime() {
+		return createTime;
+	}
+	public void setCreateTime(Long createTime) {
+		this.createTime = createTime;
 	}
 	
+	public Long getUpdateTime() {
+		return updateTime;
+	}
+	public void setUpdateTime(Long updateTime) {
+		this.updateTime = updateTime;
+	}
+	public Rating getRating() {
+		return rating;
+	}
+	public void setRating(Rating rating) {
+		this.rating = rating;
+	}
 	
 }

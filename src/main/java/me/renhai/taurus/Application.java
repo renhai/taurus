@@ -3,6 +3,9 @@ package me.renhai.taurus;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.ComponentScan.Filter;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.retry.annotation.EnableRetry;
 
 import com.google.common.base.Predicates;
@@ -17,6 +20,10 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 @SpringBootApplication
 @EnableRetry
+@ComponentScan(excludeFilters = {
+		@Filter(type = FilterType.REGEX, pattern = "me\\.renhai\\.taurus\\.es.*"),
+		@Filter(type = FilterType.REGEX, pattern = "me\\.renhai\\.taurus\\.redis.*")
+		})
 public class Application {
 
     public static void main(String[] args) {

@@ -1,24 +1,31 @@
 package me.renhai.taurus.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Index;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(
-indexes = {
-	@Index (columnList = "movieId")
+uniqueConstraints = {
+	@UniqueConstraint (name = "uk_movieid_celebrityid", columnNames = {"movieId", "celebrityId"})
 })
-public class Author {
+public class Author implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5719195708506695717L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
-	private Integer celebrityId;
 	private Integer movieId;
+	private Integer celebrityId;
 	private Long createTime;
+	private Long updateTime;
 	
 	public Integer getId() {
 		return id;
@@ -45,10 +52,12 @@ public class Author {
 	public void setCreateTime(Long createTime) {
 		this.createTime = createTime;
 	}
-	@Override
-	public String toString() {
-		return "Author [id=" + id + ", celebrityId=" + celebrityId + ", movieId=" + movieId + ", createTime="
-				+ createTime + "]";
+	
+	public Long getUpdateTime() {
+		return updateTime;
+	}
+	public void setUpdateTime(Long updateTime) {
+		this.updateTime = updateTime;
 	}
 	
 }

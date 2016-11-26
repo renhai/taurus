@@ -6,4 +6,6 @@ import me.renhai.taurus.entity.Author;
 
 public interface AuthorRepository extends JpaRepository<Author, Integer> {
 	void deleteByMovieId(Integer movieId);
+	Author findByMovieIdAndCelebrityId(Integer movieId, Integer celebrityId);
+
 }

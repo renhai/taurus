@@ -1,6 +1,8 @@
 package me.renhai.taurus.controllers;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import me.renhai.taurus.spider.task.RottenTomatoesProcessor;
+import me.renhai.taurus.spider.task.TaurusPipline;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.Spider.Status;
 import us.codecraft.webmagic.pipeline.JsonFilePipeline;
@@ -19,10 +22,14 @@ public class RottenTomatoesTaskController {
 
 	private Spider spider;
 	
+	@Autowired
+	private ApplicationContext context;
+	
 	private void initSpider(String path, int threadNum) {
 		spider = Spider.create(new RottenTomatoesProcessor())
 					   .addUrl("https://www.rottentomatoes.com/")
 					   .addPipeline(new JsonFilePipeline(path))
+					   .addPipeline(new TaurusPipline(context))
 					   .thread(threadNum);
 	}
 	

@@ -1,5 +1,6 @@
 package me.renhai.taurus.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -11,21 +12,32 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.hibernate.search.annotations.Analyzer;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+
 @Table(
 indexes = {
-	@Index (columnList = "name")
+	@Index (name = "idx_name", columnList = "name")
 }, 
 uniqueConstraints = {
-	@UniqueConstraint(columnNames = {"link"})
+	@UniqueConstraint(name = "uk_link", columnNames = {"link"})
 })
 @Entity
-public class Celebrity {
+@Indexed
+public class Celebrity implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2344535958387644946L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 	private String actorId;
 	private Integer source;
 	private String type;
+	@Field
+	@Analyzer(definition = "en")
 	private String name;
 	private String link;
 	private String image;
@@ -33,6 +45,9 @@ public class Celebrity {
 	private String birthplace;
 	@Lob
 	private String bio;
+	private Long createTime;
+	private Long updateTime;
+
 	
 	public Integer getId() {
 		return id;
@@ -94,11 +109,18 @@ public class Celebrity {
 	public void setBio(String bio) {
 		this.bio = bio;
 	}
-	@Override
-	public String toString() {
-		return "Celebrity [id=" + id + ", source=" + source + ", actorId=" + actorId + ", type=" + type + ", name="
-				+ name + ", link=" + link + ", image=" + image + ", birthday=" + birthday + ", birthplace=" + birthplace
-				+ ", bio=" + bio + "]";
+	
+	public Long getCreateTime() {
+		return createTime;
+	}
+	public void setCreateTime(Long createTime) {
+		this.createTime = createTime;
 	}
 	
+	public Long getUpdateTime() {
+		return updateTime;
+	}
+	public void setUpdateTime(Long updateTime) {
+		this.updateTime = updateTime;
+	}
 }

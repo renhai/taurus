@@ -1,36 +1,7 @@
-package me.renhai.taurus.entity;
+package me.renhai.taurus.vo;
 
-import java.io.Serializable;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-@Entity
-@Table(
-indexes = {
-	@Index (name = "idx_criticratingvalue", columnList = "criticRatingValue"),
-})
-public class Rating implements Serializable {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 2470764478958994983L;
-
-	@Id
-    @OneToOne
-    @JoinColumn(name = "movie_id")
-	@JsonIgnore
-	private Movie movie;
+public class RatingVo {
 	
-	@Column(length = 1024)
 	private String criticsConsensus;
 	private Integer criticRatingValue;
 	private String criticAverageRating;
@@ -96,13 +67,5 @@ public class Rating implements Serializable {
 	public void setAudienceRatingCount(Integer audienceRatingCount) {
 		this.audienceRatingCount = audienceRatingCount;
 	}
-
-	public Movie getMovie() {
-		return movie;
-	}
-	public void setMovie(Movie movie) {
-		this.movie = movie;
-	}
-	
 	
 }

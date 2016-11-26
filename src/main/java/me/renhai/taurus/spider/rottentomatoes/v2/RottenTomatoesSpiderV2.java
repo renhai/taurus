@@ -11,7 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import com.alibaba.fastjson.JSON;
+
 import me.renhai.taurus.spider.rottentomatoes.RTMovie;
+import me.renhai.taurus.tools.MovieDataImporter;
 import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.pipeline.ResultItemsCollectorPipeline;
@@ -24,6 +27,9 @@ public class RottenTomatoesSpiderV2 {
 	private void init() {
 		
 	}
+	
+	@Autowired
+	private MovieDataImporter movieDataImporter;
 	
 	@Autowired
 	private RottenTomatoesMovieProcessor rottenTomatoesMovieProcessor;
@@ -62,6 +68,13 @@ public class RottenTomatoesSpiderV2 {
         movie.setCast(items.get("cast"));
 		movie.setRating(items.get("rating"));
 		movie.setTimestamp(System.currentTimeMillis());
+		
+        try {
+        	movieDataImporter.processAndMergeData(JSON.toJSONString(items.getAll()));
+        	LOG.info("processAndMergeData: " + movie.getLink());
+        } catch (Exception e) {
+            LOG.warn("process and merge data error", e);
+        }
         return movie;
 	}
 
