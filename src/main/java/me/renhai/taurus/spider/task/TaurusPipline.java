@@ -13,7 +13,7 @@ import us.codecraft.webmagic.pipeline.Pipeline;
 
 
 public class TaurusPipline implements Pipeline {
-	private static final Logger LOG = LoggerFactory.getLogger(MovieDataImporter.class);
+	private static final Logger LOG = LoggerFactory.getLogger(TaurusPipline.class);
 
 	private MovieDataImporter movieDataImporter;
 	
@@ -25,6 +25,7 @@ public class TaurusPipline implements Pipeline {
     public void process(ResultItems resultItems, Task task) {
         try {
         	movieDataImporter.processAndMergeData(JSON.toJSONString(resultItems.getAll()));
+        	LOG.info("processAndMergeData: " + resultItems.get("link"));
         } catch (Exception e) {
             LOG.warn("process and merge data error", e);
         }

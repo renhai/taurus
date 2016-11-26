@@ -34,7 +34,7 @@ public class MovieDataInitializer implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		LOG.info("start importing data...");
-//		importData();
+		importData();
 		LOG.info("finish importing data.");
 	}
 	
@@ -47,7 +47,7 @@ public class MovieDataInitializer implements CommandLineRunner {
 			System.out.println("An error occurred trying to build the serach index: " + e.toString());
 		}
 		
-		LOG.info("****finish building index ****");
+		LOG.info("**** finish building index ****");
 	}
 	
 	@Transactional
