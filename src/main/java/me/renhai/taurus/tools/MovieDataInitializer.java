@@ -25,6 +25,9 @@ public class MovieDataInitializer implements CommandLineRunner {
 	
 	@Value("${movie.data.dir}")
 	private String path;
+	
+	@Value("${movie.data.needimport}")
+	private boolean needimport;
 
 	@Autowired
 	private EntityManager entityManager;
@@ -34,9 +37,11 @@ public class MovieDataInitializer implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		LOG.info("start importing data...");
-		importData();
-		LOG.info("finish importing data.");
+		if (needimport) {
+			LOG.info("start importing data...");
+			importData();
+			LOG.info("finish importing data.");
+		}
 	}
 	
 	@SuppressWarnings("unused")

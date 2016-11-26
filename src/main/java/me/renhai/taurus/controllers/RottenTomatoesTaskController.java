@@ -11,13 +11,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import me.renhai.taurus.spider.task.RottenTomatoesProcessor;
-import me.renhai.taurus.spider.task.TaurusPipline;
+import springfox.documentation.annotations.ApiIgnore;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.Spider.Status;
 import us.codecraft.webmagic.pipeline.JsonFilePipeline;
 
 @RestController
 @RequestMapping("/task/rt")
+@ApiIgnore
 public class RottenTomatoesTaskController {
 
 	private Spider spider;
@@ -29,7 +30,7 @@ public class RottenTomatoesTaskController {
 		spider = Spider.create(new RottenTomatoesProcessor())
 					   .addUrl("https://www.rottentomatoes.com/")
 					   .addPipeline(new JsonFilePipeline(path))
-					   .addPipeline(new TaurusPipline(context))
+//					   .addPipeline(new TaurusPipline(context))
 					   .thread(threadNum);
 	}
 	
