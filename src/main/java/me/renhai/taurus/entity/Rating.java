@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(
 indexes = {
-	@Index (name = "idx_criticratingvalue", columnList = "criticRatingValue"),
+	@Index (name = "idx_criticratingvalue_rating", columnList = "criticRatingValue"),
 })
 public class Rating implements Serializable {
 

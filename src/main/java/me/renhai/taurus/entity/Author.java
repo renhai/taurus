@@ -12,7 +12,7 @@ import javax.persistence.UniqueConstraint;
 @Entity
 @Table(
 uniqueConstraints = {
-	@UniqueConstraint (name = "uk_movieid_celebrityid", columnNames = {"movieId", "celebrityId"})
+	@UniqueConstraint (name = "uk_movieid_celebrityid_author", columnNames = {"movieId", "celebrityId"})
 })
 public class Author implements Serializable {
 	/**

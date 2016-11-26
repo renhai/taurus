@@ -33,12 +33,12 @@ import org.hibernate.search.annotations.TokenizerDef;
 @Entity
 @Table(
 indexes = {
-	@Index (name = "idx_year", columnList = "year"),
-	@Index (name = "idx_title", columnList = "title")
+	@Index (name = "idx_year_movie", columnList = "year"),
+	@Index (name = "idx_title_movie", columnList = "title")
 }, 
 uniqueConstraints = {
-	@UniqueConstraint(name = "uk_outerid_source", columnNames = {"outerId", "source"}),
-	@UniqueConstraint(name = "uk_link", columnNames = {"link"})
+	@UniqueConstraint(name = "uk_outerid_source_movie", columnNames = {"outerId", "source"}),
+	@UniqueConstraint(name = "uk_link_movie", columnNames = {"link"})
 })
 @Indexed
 @AnalyzerDefs(

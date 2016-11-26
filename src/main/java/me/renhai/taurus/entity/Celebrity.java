@@ -18,10 +18,10 @@ import org.hibernate.search.annotations.Indexed;
 
 @Table(
 indexes = {
-	@Index (name = "idx_name", columnList = "name")
+	@Index (name = "idx_name_celebrity", columnList = "name")
 }, 
 uniqueConstraints = {
-	@UniqueConstraint(name = "uk_link", columnNames = {"link"})
+	@UniqueConstraint(name = "uk_link_celebrity", columnNames = {"link"})
 })
 @Entity
 @Indexed
