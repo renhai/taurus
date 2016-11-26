@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -56,7 +57,15 @@ public class MovieDataInitializer implements CommandLineRunner {
 		while (iter.hasNext()) {
 			File file = iter.next();
 			String text = FileUtils.readFileToString(file, "utf-8");
-			movieDataImporter.processAndMergeData(text);
+			try {
+				movieDataImporter.processAndMergeData(text);
+				LOG.info("finish processing " + file.getName());
+			} catch (DataIntegrityViolationException e) {
+				LOG.error("processAndMergeData error, content: " + text);
+				LOG.error(e.getMessage(), e);
+			} catch (Exception e) {
+				throw e;
+			}
 		}
 	}
 
