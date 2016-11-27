@@ -36,7 +36,7 @@ public class MovieSearchService {
 					queryBuilder
 						.keyword()
 						.fuzzy()
-						.onFields("title", "synopsis")
+						.onFields("title")
 						.matching(keyword)
 						.createQuery()
 				)
