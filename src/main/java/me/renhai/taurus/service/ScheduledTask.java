@@ -29,13 +29,13 @@ public class ScheduledTask {
 		Spider spider = Spider.create(new NightstandPageProcessor()).thread(1);
 		ResultItems resultItems = spider.get(url);
 		String currPrice = resultItems.get("price");
-//		if (StringUtils.isNotBlank(prePrice) && !StringUtils.equals(prePrice, currPrice)) {
+		if (StringUtils.isNotBlank(prePrice) && !StringUtils.equals(prePrice, currPrice)) {
 			try {
 				smtpMailSender.send("myrenhai@gmail.com", "Nightstand price change!", prePrice + "->" + currPrice + "<br/>" + url);
 			} catch (MessagingException e) {
 				log.error(e.getMessage(), e);
 			}
-//		}
+		}
 		prePrice = currPrice;
 		spider.close();
 		spider = null;
