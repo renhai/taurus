@@ -17,6 +17,7 @@ package me.renhai.taurus;
 
 
 import org.junit.Test;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -31,11 +32,21 @@ public class RottenTomatoesControllerTests extends AbstractTaurusTest {
         		.andDo(MockMvcResultHandlers.print())
         		.andExpect(MockMvcResultMatchers.status().is4xxClientError());
     }
+    
+    @Test
+    public void movieShouldReturnUnauthorizedError() throws Exception {
+
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/rt/1.0/movies"))
+        		.andDo(MockMvcResultHandlers.print())
+        		.andExpect(MockMvcResultMatchers.status().isUnauthorized());
+    }
 
     @Test
     public void paramMovieShouldReturnTailoredMessage() throws Exception {
 
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/rt/1.0/movies").param("q", "sully"))
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/rt/1.0/movies")
+        	.with(SecurityMockMvcRequestPostProcessors.user(user).password(password).roles(roles))
+        	.param("q", "sully"))
         	.andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("Sully"))

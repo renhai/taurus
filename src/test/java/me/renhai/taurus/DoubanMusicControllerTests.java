@@ -17,13 +17,14 @@ package me.renhai.taurus;
 
 
 import org.junit.Test;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 
 public class DoubanMusicControllerTests extends AbstractTaurusTest {
-
+	
     @Test
     public void noParamAlbumShouldReturnError() throws Exception {
 
@@ -33,9 +34,19 @@ public class DoubanMusicControllerTests extends AbstractTaurusTest {
     }
 
     @Test
+    public void albumShouldReturnUnauthorizedError() throws Exception {
+
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/db/1.0/albums"))
+        		.andDo(MockMvcResultHandlers.print())
+        		.andExpect(MockMvcResultMatchers.status().isUnauthorized());
+    }
+
+    @Test
     public void paramAlbumShouldReturnTailoredMessage() throws Exception {
 
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/db/1.0/albums").param("q", "崔健 光冻"))
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/db/1.0/albums")
+            	.with(SecurityMockMvcRequestPostProcessors.user(user).password(password).roles(roles))
+        		.param("q", "崔健 光冻"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("光冻"))
