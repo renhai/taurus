@@ -1,4 +1,4 @@
-package me.renhai.taurus.controllers;
+package me.renhai.taurus.rest.api;
 
 import java.net.URLEncoder;
 

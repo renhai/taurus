@@ -36,7 +36,7 @@ public class Application {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("me.renhai.taurus.controllers"))
+                .apis(RequestHandlerSelectors.basePackage("me.renhai.taurus.rest.api"))
                 .paths(Predicates.not(PathSelectors.regex("/error")))
                 .build();
     }
