@@ -1,6 +1,7 @@
 package me.renhai.taurus.security;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
@@ -15,4 +16,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		web.ignoring().antMatchers("/api/db/**");
 	}
 
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		super.configure(http);
+		http.csrf().disable();
+	}
+
+	
 }
