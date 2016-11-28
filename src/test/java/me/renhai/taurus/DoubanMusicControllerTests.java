@@ -33,13 +33,13 @@ public class DoubanMusicControllerTests extends AbstractTaurusTest {
         		.andExpect(MockMvcResultMatchers.status().is4xxClientError());
     }
 
-    @Test
-    public void albumShouldReturnUnauthorizedError() throws Exception {
-
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/db/1.0/albums"))
-        		.andDo(MockMvcResultHandlers.print())
-        		.andExpect(MockMvcResultMatchers.status().isUnauthorized());
-    }
+//    @Test
+//    public void albumShouldReturnUnauthorizedError() throws Exception {
+//
+//        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/db/1.0/albums"))
+//        		.andDo(MockMvcResultHandlers.print())
+//        		.andExpect(MockMvcResultMatchers.status().isUnauthorized());
+//    }
 
     @Test
     public void paramAlbumShouldReturnTailoredMessage() throws Exception {

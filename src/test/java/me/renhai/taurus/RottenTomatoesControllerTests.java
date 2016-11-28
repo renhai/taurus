@@ -33,13 +33,13 @@ public class RottenTomatoesControllerTests extends AbstractTaurusTest {
         		.andExpect(MockMvcResultMatchers.status().is4xxClientError());
     }
     
-    @Test
-    public void movieShouldReturnUnauthorizedError() throws Exception {
-
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/rt/1.0/movies"))
-        		.andDo(MockMvcResultHandlers.print())
-        		.andExpect(MockMvcResultMatchers.status().isUnauthorized());
-    }
+//    @Test
+//    public void movieShouldReturnUnauthorizedError() throws Exception {
+//
+//        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/rt/1.0/movies"))
+//        		.andDo(MockMvcResultHandlers.print())
+//        		.andExpect(MockMvcResultMatchers.status().isUnauthorized());
+//    }
 
     @Test
     public void paramMovieShouldReturnTailoredMessage() throws Exception {

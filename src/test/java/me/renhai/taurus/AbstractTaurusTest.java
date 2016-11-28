@@ -25,7 +25,7 @@ public class AbstractTaurusTest {
 	@Value("${security.user.password}")
 	protected String password;
 	
-	@Value("${management.security.roles}")
+	@Value("${security.user.role}")
 	protected String roles;
 	
 	@Autowired
