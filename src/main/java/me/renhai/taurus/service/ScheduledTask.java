@@ -23,7 +23,7 @@ public class ScheduledTask {
 	private String prePrice;
 	
 	//execute every 30 minutes
-    @Scheduled(fixedRate = 30 * 60 * 1000)
+    @Scheduled(fixedRate = 30 * 60 * 1000, initialDelay = 30 * 1000)
 	public void sendNotificationIfPriceChange() {
 		String url = "https://www.wayfair.com/Hayward-Nightstand-56507-MCRR2276.html";
 		Spider spider = Spider.create(new NightstandPageProcessor()).thread(1);

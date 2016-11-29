@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -74,17 +75,20 @@ public class Movie implements Serializable {
 	private Integer id;
 	
 	@NotNull
+	@Column(length = 60)
 	private String outerId;
 	
 	@NotNull
 	private Integer source;
 	
+	@Column(length = 255)
 	private String link;
 	
 	@Field(index = org.hibernate.search.annotations.Index.YES, store = Store.NO, analyze = Analyze.YES)
 	@Analyzer(definition = "en")
 	@NotNull
 	@Boost(2.0f)
+	@Column(length = 255)
 	private String title;
 	
 	@Lob
@@ -92,13 +96,17 @@ public class Movie implements Serializable {
 	@Analyzer(definition = "en")
 	private String synopsis;
 	
+	@Column(length = 128)
 	private String mpaaRating;
+	@Column(length = 128)
 	private String genres;
 	private Integer runtime;
 	private Integer year;
 	private Date inTheatersDate;
 	private Date onDvdDate;
+	@Column(length = 128)
 	private String studio;
+	@Column(length = 255)
 	private String image;
 	private Long timestamp;
 	private Long createTime;

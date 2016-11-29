@@ -2,6 +2,8 @@ package me.renhai.taurus.tools;
 
 import java.io.File;
 import java.util.Iterator;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
@@ -34,6 +36,9 @@ public class MovieDataInitializer implements CommandLineRunner {
 
 	@Autowired
 	private MovieDataImporter movieDataImporter;
+	
+    private ExecutorService executor = Executors.newFixedThreadPool(10);
+
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -63,8 +68,15 @@ public class MovieDataInitializer implements CommandLineRunner {
 			File file = iter.next();
 			String text = FileUtils.readFileToString(file, "utf-8");
 			try {
-				movieDataImporter.processAndMergeData(text);
-				LOG.info("finish processing " + file.getName());
+				executor.execute(new Runnable() {
+					
+					@Override
+					public void run() {
+						movieDataImporter.processAndMergeData(text);
+						LOG.info("finish processing " + file.getName());
+					}
+					
+				});
 			} catch (DataIntegrityViolationException e) {
 				LOG.error("processAndMergeData error, content: " + text);
 				LOG.error(e.getMessage(), e);
@@ -72,6 +84,8 @@ public class MovieDataInitializer implements CommandLineRunner {
 				throw e;
 			}
 		}
+		executor.shutdown();
+		
 	}
 
 }

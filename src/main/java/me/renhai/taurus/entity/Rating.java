@@ -33,12 +33,14 @@ public class Rating implements Serializable {
 	@Column(length = 1024)
 	private String criticsConsensus;
 	private Integer criticRatingValue;
+	@Column(length = 15)
 	private String criticAverageRating;
 	private Integer criticReviewsCounted;
 	private Integer criticFresh;
 	private Integer criticRotten;
 	
 	private Integer audienceRatingValue;
+	@Column(length = 10)
 	private String audienceAverageRating;
 	private Integer audienceRatingCount;
 	

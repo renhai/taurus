@@ -3,6 +3,7 @@ package me.renhai.taurus.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -35,13 +36,18 @@ public class Celebrity implements Serializable {
 	private Integer id;
 	private String actorId;
 	private Integer source;
+	@Column(length = 25)
 	private String type;
 	@Field
 	@Analyzer(definition = "en")
+	@Column(length = 128)
 	private String name;
+	@Column(length = 128)
 	private String link;
+	@Column(length = 255)
 	private String image;
 	private Date birthday;
+	@Column(length = 128)
 	private String birthplace;
 	@Lob
 	private String bio;

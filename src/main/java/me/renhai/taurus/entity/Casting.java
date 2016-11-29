@@ -2,6 +2,7 @@ package me.renhai.taurus.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,6 +26,7 @@ public class Casting implements Serializable {
 	private Integer id;
 	private Integer movieId;
 	private Integer celebrityId;
+	@Column(length = 128)
 	private String characters;
 	private Long createTime;
 	private Long updateTime;

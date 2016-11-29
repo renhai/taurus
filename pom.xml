@@ -122,12 +122,10 @@
 			<artifactId>fastjson</artifactId>
 			<version>1.2.21</version>
 		</dependency>
-		<!--  
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
-		-->
 		<!-- hibernate-search start -->
 		<dependency>
 		    <groupId>org.hibernate</groupId>
