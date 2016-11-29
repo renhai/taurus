@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
@@ -47,10 +48,12 @@ public class MovieDataInitializer implements CommandLineRunner {
 			importData();
 			LOG.info("finish importing data.");
 		}
+		buildSearchIndex();
 	}
 	
-	@SuppressWarnings("unused")
 	private void buildSearchIndex() {
+		LOG.info("**** start building index... ****");
+
 		try {
 			FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
 			fullTextEntityManager.createIndexer().startAndWait();
@@ -85,6 +88,14 @@ public class MovieDataInitializer implements CommandLineRunner {
 			}
 		}
 		executor.shutdown();
+		
+		try {
+			while (!executor.awaitTermination(10, TimeUnit.SECONDS)) {
+				LOG.info("Awaiting completion of threads.");
+			}
+		} catch (InterruptedException e) {
+			LOG.error(e.getMessage(), e);
+		}
 		
 	}
 
