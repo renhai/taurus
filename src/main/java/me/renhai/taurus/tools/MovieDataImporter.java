@@ -43,7 +43,6 @@ public class MovieDataImporter {
 	@Autowired
 	private CastingRepository castingRepository;
 	
-	
 	public void processAndMergeData(String text) {
 		JSONObject j;
 		try {
@@ -52,6 +51,11 @@ public class MovieDataImporter {
 			LOG.error(e.getMessage() + ": " + text);
 			return;
 		}
+		if (j == null || j.isEmpty()) return;
+		processAndMergeData(j);
+	}
+	
+	public void processAndMergeData(JSONObject j) {
 
 		Movie movieEntity = saveOrUpdateMovie(j);
 //		saveOrUpdateRating(j, movieEntity.getId());

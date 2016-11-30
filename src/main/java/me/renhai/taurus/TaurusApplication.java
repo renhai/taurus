@@ -25,10 +25,10 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 		@Filter(type = FilterType.REGEX, pattern = "me\\.renhai\\.taurus\\.es.*"),
 		@Filter(type = FilterType.REGEX, pattern = "me\\.renhai\\.taurus\\.redis.*")
 		})
-public class Application {
+public class TaurusApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(TaurusApplication.class, args);
     }
     
     @Bean

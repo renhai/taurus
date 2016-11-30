@@ -31,6 +31,9 @@ public class MovieDataInitializer implements CommandLineRunner {
 	
 	@Value("${movie.data.needimport}")
 	private boolean needimport;
+	
+	@Value("${movie.data.needbuildindex}")
+	private boolean needbuildindex;
 
 	@Autowired
 	private EntityManager entityManager;
@@ -48,20 +51,20 @@ public class MovieDataInitializer implements CommandLineRunner {
 			importData();
 			LOG.info("finish importing data.");
 		}
-		buildSearchIndex();
+		if (needbuildindex) {
+			LOG.info("**** start building index... ****");
+			buildSearchIndex();
+			LOG.info("**** finish building index ****");
+		}
 	}
 	
 	private void buildSearchIndex() {
-		LOG.info("**** start building index... ****");
-
 		try {
 			FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
 			fullTextEntityManager.createIndexer().startAndWait();
 		} catch (InterruptedException e) {
-			System.out.println("An error occurred trying to build the serach index: " + e.toString());
+			LOG.error("An error occurred trying to build the serach index: " + e.toString());
 		}
-		
-		LOG.info("**** finish building index ****");
 	}
 	
 	@Transactional
@@ -91,7 +94,7 @@ public class MovieDataInitializer implements CommandLineRunner {
 		
 		try {
 			while (!executor.awaitTermination(10, TimeUnit.SECONDS)) {
-				LOG.info("Awaiting completion of threads.");
+				LOG.info("Awaiting completion of importing data.");
 			}
 		} catch (InterruptedException e) {
 			LOG.error(e.getMessage(), e);
