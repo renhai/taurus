@@ -1,4 +1,4 @@
-package me.renhai.taurus.spider.rottentomatoes;
+package me.renhai.taurus.crawler.rottentomatoes;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -22,11 +22,11 @@ import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
 import com.jayway.jsonpath.ReadContext;
 
-import me.renhai.taurus.spider.AbstractSpider;
+import me.renhai.taurus.crawler.AbstractCrawler;
 
 @Service
-public class RottenTomatoesSpider extends AbstractSpider<RTMovie, String> {
-	private static final Logger LOG = LoggerFactory.getLogger(RottenTomatoesSpider.class);
+public class RottenTomatoesCrawler extends AbstractCrawler<RottenTomatoesMovie, String> {
+	private static final Logger LOG = LoggerFactory.getLogger(RottenTomatoesCrawler.class);
 	private Configuration conf = Configuration.defaultConfiguration().addOptions(Option.DEFAULT_PATH_LEAF_TO_NULL).addOptions(Option.SUPPRESS_EXCEPTIONS);
 
 	@PostConstruct
@@ -70,9 +70,9 @@ public class RottenTomatoesSpider extends AbstractSpider<RTMovie, String> {
 	private By audienceAvg = By.xpath("//div[contains(@class, 'audiencepanel')]//span[contains(text(), 'Average Rating')]/..");
 	private By audienceUserRating = By.xpath("//div[contains(@class, 'audiencepanel')]//span[contains(text(), 'User Rating')]/..");
 	
-	protected RTMovie process(String conditions) {
+	protected RottenTomatoesMovie process(String conditions) {
 
-		RTMovie movie = new RTMovie();
+		RottenTomatoesMovie movie = new RottenTomatoesMovie();
 		movie.setLink(getDriver().getCurrentUrl());
 		
 		List<WebElement> results = getDriver().findElements(summaryResult);

@@ -1,4 +1,4 @@
-package me.renhai.taurus.spider.douban;
+package me.renhai.taurus.crawler.douban;
 
 import java.io.Serializable;
 

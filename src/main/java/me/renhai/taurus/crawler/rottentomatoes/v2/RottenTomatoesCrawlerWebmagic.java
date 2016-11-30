@@ -1,4 +1,4 @@
-package me.renhai.taurus.spider.rottentomatoes.v2;
+package me.renhai.taurus.crawler.rottentomatoes.v2;
 
 import java.net.URLEncoder;
 import java.util.List;
@@ -7,19 +7,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import me.renhai.taurus.spider.rottentomatoes.RTMovie;
+import me.renhai.taurus.crawler.rottentomatoes.RottenTomatoesMovie;
 import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.pipeline.ResultItemsCollectorPipeline;
 
 @Service
-public class RottenTomatoesSpiderV2 {
+public class RottenTomatoesCrawlerWebmagic {
 //	private static final Logger LOG = LoggerFactory.getLogger(RottenTomatoesSpiderV2.class);
 
 	@Autowired
 	private RottenTomatoesMovieProcessor rottenTomatoesMovieProcessor;
 	
-	public RTMovie search(String conditions) throws Exception {
+	public RottenTomatoesMovie search(String conditions) throws Exception {
 		conditions = URLEncoder.encode(conditions, "UTF-8");
 //		String url = "https://www.rottentomatoes.com/search/?search=" + conditions;
 		String url = "https://www.rottentomatoes.com/api/private/v1.0/search/?catCount=2&q=" + conditions;
@@ -29,7 +29,7 @@ public class RottenTomatoesSpiderV2 {
         		.addUrl(url)
         		.run();
         
-        RTMovie movie = new RTMovie();
+        RottenTomatoesMovie movie = new RottenTomatoesMovie();
         List<ResultItems> resultItemsList = pipline.getCollected();
         if (CollectionUtils.isEmpty(resultItemsList)) {
         	return null;

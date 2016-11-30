@@ -1,4 +1,4 @@
-package me.renhai.taurus.spider;
+package me.renhai.taurus.crawler;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -12,8 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.retry.annotation.Retryable;
 
-public abstract class AbstractSpider<T, C> {
-	private static final Logger LOG = LoggerFactory.getLogger(AbstractSpider.class);
+public abstract class AbstractCrawler<T, C> {
+	private static final Logger LOG = LoggerFactory.getLogger(AbstractCrawler.class);
 	private static final int MAX_RETRY = 3;
 	
 	private ThreadLocal<WebDriver> pool = new ThreadLocal<WebDriver>() {

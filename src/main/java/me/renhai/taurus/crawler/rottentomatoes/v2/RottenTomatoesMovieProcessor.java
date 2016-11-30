@@ -1,4 +1,4 @@
-package me.renhai.taurus.spider.rottentomatoes.v2;
+package me.renhai.taurus.crawler.rottentomatoes.v2;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -9,6 +9,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jayway.jsonpath.Configuration;
@@ -17,14 +18,41 @@ import com.jayway.jsonpath.Option;
 import com.jayway.jsonpath.ReadContext;
 
 import us.codecraft.webmagic.Page;
+import us.codecraft.webmagic.Site;
+import us.codecraft.webmagic.processor.PageProcessor;
 import us.codecraft.webmagic.selector.HtmlNode;
 import us.codecraft.webmagic.selector.Selectable;
 
-public class RottenTomatoesTorturer {
-	private static Configuration conf = Configuration.defaultConfiguration().addOptions(Option.DEFAULT_PATH_LEAF_TO_NULL).addOptions(Option.SUPPRESS_EXCEPTIONS);
-	private static final Logger LOG = LoggerFactory.getLogger(RottenTomatoesTorturer.class);
+@Service
+public class RottenTomatoesMovieProcessor implements PageProcessor {
+	private static final Logger LOG = LoggerFactory.getLogger(RottenTomatoesMovieProcessor.class);
+	private Configuration conf = Configuration.defaultConfiguration().addOptions(Option.DEFAULT_PATH_LEAF_TO_NULL).addOptions(Option.SUPPRESS_EXCEPTIONS);
 
-	public static void torturePage(Page page) {
+	private Site site = Site.me().setDomain("rottentomatoes.com").setRetryTimes(5).setTimeOut(10000).setSleepTime(2000).setUserAgent(
+	            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.65 Safari/537.31");;
+	     
+	@Override
+	public void process(Page page) {
+    	if (page.getUrl().get().matches(".*/m/[^/]+/?$")) {
+    		torturePage(page);
+    	} else if (page.getUrl().regex(".*/search/\\?search.*").match()) {
+    		page.addTargetRequests(page.getHtml().xpath("//section[@id='SummaryResults']/ul/li[1]/div[@class='details']//a[contains(@href, '/m/')][1]").links().all());
+    		page.setSkip(true);
+    	} else if (page.getUrl().regex(".*/api/private/v1\\.0/search/.*").match()) {
+    		String path= JsonPath.using(conf).parse(page.getRawText()).read("$.movies[0].url");
+    		if (StringUtils.isNotBlank(path)) {
+    			page.addTargetRequest("https://www.rottentomatoes.com" + path);
+    		}
+    		page.setSkip(true);
+    	}
+	}
+
+	@Override
+	public Site getSite() {
+		return site;
+	}
+	
+	public void torturePage(Page page) {
 		String json = page.getHtml().xpath("//script[@id='jsonLdSchema']/html()").get();
 		ReadContext ctx = JsonPath.parse(json, conf);
 		page.putField("movieId", page.getHtml().$("meta[name=movieID]", "content").get());
@@ -47,12 +75,12 @@ public class RottenTomatoesTorturer {
 		processRating(page, ctx);	
 	}
 	
-	private static String joinString(ReadContext ctx, String path) {
+	private String joinString(ReadContext ctx, String path) {
 		List<String> names = ctx.read(path);
 		return StringUtils.join(names, ",");
 	}
 	
-	private static void processRating(Page page, ReadContext ctx) {
+	private void processRating(Page page, ReadContext ctx) {
 //		RTRating res = new RTRating();
 		JSONObject json = new JSONObject();
 		NumberFormat nf = NumberFormat.getInstance(Locale.US);
@@ -113,7 +141,7 @@ public class RottenTomatoesTorturer {
 		page.putField("rating", json);
 	}
 	
-	private static void processCast(Page page, ReadContext ctx) {
+	private void processCast(Page page, ReadContext ctx) {
 //		List<RTCast> res = new ArrayList<>();
 		@SuppressWarnings("unchecked")
 		List<Map<String, Object>> actors = ctx.read("$.actors", List.class);
@@ -138,4 +166,5 @@ public class RottenTomatoesTorturer {
 		}
 		page.putField("cast", actors);
 	}
+
 }

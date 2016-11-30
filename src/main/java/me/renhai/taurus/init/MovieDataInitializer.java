@@ -1,4 +1,4 @@
-package me.renhai.taurus.tools;
+package me.renhai.taurus.init;
 
 import java.io.File;
 import java.util.Iterator;
@@ -19,6 +19,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
+
+import me.renhai.taurus.tools.MovieDataImporter;
 
 @Component
 public class MovieDataInitializer implements CommandLineRunner {

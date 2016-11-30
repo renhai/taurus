@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import me.renhai.taurus.crawler.rottentomatoes.RottenTomatoesMovie;
+import me.renhai.taurus.crawler.rottentomatoes.RottenTomatoesCrawler;
+import me.renhai.taurus.crawler.rottentomatoes.v2.RottenTomatoesCrawlerWebmagic;
 import me.renhai.taurus.interceptors.RateLimit;
-import me.renhai.taurus.spider.rottentomatoes.RTMovie;
-import me.renhai.taurus.spider.rottentomatoes.RottenTomatoesSpider;
-import me.renhai.taurus.spider.rottentomatoes.v2.RottenTomatoesSpiderV2;
 import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
@@ -21,27 +21,27 @@ import springfox.documentation.annotations.ApiIgnore;
 public class RottenTomatoesController {
 
 	@Autowired
-	private RottenTomatoesSpiderV2 rottenTomatoesSpiderV2;
+	private RottenTomatoesCrawlerWebmagic rottenTomatoesCrawlerWebmagic;
 	
 	@Autowired
-	private RottenTomatoesSpider rottenTomatoesSpider;
+	private RottenTomatoesCrawler rottenTomatoesCrawler;
 	
 	@RateLimit(5)
 	@GetMapping("/1.0/movies")
-	public ResponseEntity<RTMovie> movies(
+	public ResponseEntity<RottenTomatoesMovie> movies(
 			@RequestParam (value = "q", required = true) String query) throws Exception {
 		query = StringUtils.trimToEmpty(query);
-		RTMovie movie = rottenTomatoesSpider.search(query);
-		return new ResponseEntity<RTMovie>(movie, HttpStatus.OK);
+		RottenTomatoesMovie movie = rottenTomatoesCrawler.search(query);
+		return new ResponseEntity<RottenTomatoesMovie>(movie, HttpStatus.OK);
 	}
 	
-	@RateLimit(10)
+	@RateLimit(30)
 	@GetMapping("/2.0/movies")
-	public ResponseEntity<RTMovie> moviesV2(
+	public ResponseEntity<RottenTomatoesMovie> moviesV2(
 			@RequestParam (value = "q", required = true) String query) throws Exception {
 		query = StringUtils.trimToEmpty(query);
-		RTMovie movie = rottenTomatoesSpiderV2.search(query);
-		return new ResponseEntity<RTMovie>(movie, HttpStatus.OK);
+		RottenTomatoesMovie movie = rottenTomatoesCrawlerWebmagic.search(query);
+		return new ResponseEntity<RottenTomatoesMovie>(movie, HttpStatus.OK);
 	}
 	
 }

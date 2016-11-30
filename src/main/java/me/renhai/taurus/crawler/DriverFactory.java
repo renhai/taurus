@@ -1,4 +1,4 @@
-package me.renhai.taurus.spider;
+package me.renhai.taurus.crawler;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;

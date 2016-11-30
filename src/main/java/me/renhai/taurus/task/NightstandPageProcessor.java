@@ -1,4 +1,4 @@
-package me.renhai.taurus.spider.task;
+package me.renhai.taurus.task;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

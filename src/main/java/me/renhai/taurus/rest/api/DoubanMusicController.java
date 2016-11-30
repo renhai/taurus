@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import me.renhai.taurus.crawler.douban.DoubanAlbum;
+import me.renhai.taurus.crawler.douban.DoubanMusicCrawler;
 import me.renhai.taurus.interceptors.RateLimit;
-import me.renhai.taurus.spider.douban.DoubanAlbum;
-import me.renhai.taurus.spider.douban.DoubanMusicSpider;
 import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
@@ -25,7 +25,7 @@ public class DoubanMusicController {
 	private static final Logger LOG = LoggerFactory.getLogger(DoubanMusicController.class);
 
 	@Autowired
-	private DoubanMusicSpider doubanMusicSpider;
+	private DoubanMusicCrawler doubanMusicCrawler;
 
 	@RateLimit(5)
     @GetMapping({"/1.0/albums"})
@@ -34,7 +34,7 @@ public class DoubanMusicController {
     	LOG.info("query: " + query);
     	query = StringUtils.trimToEmpty(query);
 		query = URLEncoder.encode(query, "UTF-8");
-    	DoubanAlbum body = doubanMusicSpider.search(query);
+    	DoubanAlbum body = doubanMusicCrawler.search(query);
     	return new ResponseEntity<DoubanAlbum>(body, HttpStatus.OK);
     }
 

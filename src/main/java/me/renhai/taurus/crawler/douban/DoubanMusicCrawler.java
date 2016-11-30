@@ -1,4 +1,4 @@
-package me.renhai.taurus.spider.douban;
+package me.renhai.taurus.crawler.douban;
 
 import java.util.List;
 
@@ -10,12 +10,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import me.renhai.taurus.spider.AbstractSpider;
+import me.renhai.taurus.crawler.AbstractCrawler;
 
 @Service
-public class DoubanMusicSpider extends AbstractSpider<DoubanAlbum, String> {
+public class DoubanMusicCrawler extends AbstractCrawler<DoubanAlbum, String> {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(DoubanMusicSpider.class);
+	private static final Logger LOG = LoggerFactory.getLogger(DoubanMusicCrawler.class);
 	
 	private By searchResults = By.xpath("//a[@class='nbg' and contains(@href,'subject')]");
 	private By showMore = By.xpath("//a[@class='j a_show_full']");

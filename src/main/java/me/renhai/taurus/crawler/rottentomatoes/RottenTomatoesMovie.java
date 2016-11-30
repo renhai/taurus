@@ -1,4 +1,4 @@
-package me.renhai.taurus.spider.rottentomatoes;
+package me.renhai.taurus.crawler.rottentomatoes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import net.minidev.json.JSONArray;
 
-public class RTMovie {
+public class RottenTomatoesMovie {
 	private Long movieId;
 	private String link;
 	private String title;
@@ -135,14 +135,5 @@ public class RTMovie {
 	public void setAuthors(JSONArray authors) {
 		this.authors = authors;
 	}
-	@Override
-	public String toString() {
-		return "RTMovie [movieId=" + movieId + ", link=" + link + ", title=" + title + ", synopsis=" + synopsis
-				+ ", mpaaRating=" + mpaaRating + ", genres=" + genres + ", runtime=" + runtime + ", year=" + year
-				+ ", inTheatersDate=" + inTheatersDate + ", onDvdDate=" + onDvdDate + ", studio=" + studio
-				+ ", directors=" + directors + ", authors=" + authors + ", image=" + image + ", timestamp=" + timestamp
-				+ ", rating=" + rating + ", cast=" + cast + "]";
-	}
-	
 	
 }
