@@ -13,9 +13,11 @@ import me.renhai.taurus.interceptors.RateLimit;
 import me.renhai.taurus.spider.rottentomatoes.RTMovie;
 import me.renhai.taurus.spider.rottentomatoes.RottenTomatoesSpider;
 import me.renhai.taurus.spider.rottentomatoes.v2.RottenTomatoesSpiderV2;
+import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 @RequestMapping("/api/rt")
+@ApiIgnore
 public class RottenTomatoesController {
 
 	@Autowired

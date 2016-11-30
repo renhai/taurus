@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 import me.renhai.taurus.interceptors.RateLimit;
 import me.renhai.taurus.spider.douban.DoubanAlbum;
 import me.renhai.taurus.spider.douban.DoubanMusicSpider;
+import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 @RequestMapping("/api/db")
+@ApiIgnore
 public class DoubanMusicController {
 	private static final Logger LOG = LoggerFactory.getLogger(DoubanMusicController.class);
 

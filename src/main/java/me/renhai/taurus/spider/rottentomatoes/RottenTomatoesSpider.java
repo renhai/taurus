@@ -2,7 +2,6 @@ package me.renhai.taurus.spider.rottentomatoes;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -17,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import com.alibaba.fastjson.JSONObject;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
@@ -125,21 +125,27 @@ public class RottenTomatoesSpider extends AbstractSpider<RTMovie, String> {
 		return movie;
 	}
 	
-	private RTRating processRating(ReadContext ctx) {
-		RTRating res = new RTRating();
+	private JSONObject processRating(ReadContext ctx) {
+//		RTRating res = new RTRating();
+		JSONObject json = new JSONObject();
 		NumberFormat nf = NumberFormat.getInstance(Locale.US);
-		res.setCriticRatingValue(ctx.read("$.aggregateRating.ratingValue"));
-		res.setCriticReviewsCounted(ctx.read("$.aggregateRating.reviewCount"));
+//		res.setCriticRatingValue(ctx.read("$.aggregateRating.ratingValue"));
+//		res.setCriticReviewsCounted(ctx.read("$.aggregateRating.reviewCount"));
+		json.put("criticRatingValue", ctx.read("$.aggregateRating.ratingValue"));
+		json.put("criticReviewsCounted", ctx.read("$.aggregateRating.reviewCount"));
+		
 		if (isElementPresent(criticFresh)) {
 			try {
-				res.setCriticFresh(nf.parse(getDriver().findElement(criticFresh).getAttribute("innerText")).intValue());
+//				res.setCriticFresh(nf.parse(getDriver().findElement(criticFresh).getAttribute("innerText")).intValue());
+				json.put("criticFresh", nf.parse(getDriver().findElement(criticFresh).getAttribute("innerText")).intValue());
 			} catch (ParseException e) {
 				LOG.error(e.getMessage());
 			}
 		}
 		if (isElementPresent(criticRotten)) {
 			try {
-				res.setCriticRotten(nf.parse(getDriver().findElement(criticRotten).getAttribute("innerText")).intValue());
+//				res.setCriticRotten(nf.parse(getDriver().findElement(criticRotten).getAttribute("innerText")).intValue());
+				json.put("criticRotten", nf.parse(getDriver().findElement(criticRotten).getAttribute("innerText")).intValue());
 			} catch (ParseException e) {
 				LOG.error(e.getMessage());
 			}
@@ -147,58 +153,69 @@ public class RottenTomatoesSpider extends AbstractSpider<RTMovie, String> {
 		if (isElementPresent(criticAvg)) {
 			String avg = getDriver().findElement(criticAvg).getAttribute("innerText");
 			avg = StringUtils.removeStart(avg, "Average Rating:");
-			res.setAudienceAverageRating(StringUtils.trimToEmpty(avg));
+//			res.setAudienceAverageRating(StringUtils.trimToEmpty(avg));
+			json.put("criticAverageRating", StringUtils.trimToEmpty(avg));
 		}
 		
 		if (isElementPresent(audienceRate)) {
 			String meterValue = getDriver().findElement(audienceRate).getAttribute("innerText");
-			res.setAudienceRatingValue(Integer.parseInt(StringUtils.removeEnd(StringUtils.trimToEmpty(meterValue), "%")));
+//			res.setAudienceRatingValue(Integer.parseInt(StringUtils.removeEnd(StringUtils.trimToEmpty(meterValue), "%")));
+			json.put("audienceRatingValue", Integer.parseInt(StringUtils.removeEnd(StringUtils.trimToEmpty(meterValue), "%")));
+
 		}
 		if (isElementPresent(audienceAvg)) {
 			String avg = getDriver().findElement(audienceAvg).getAttribute("innerText");
 			avg = StringUtils.removeStart(avg, "Average Rating:");
-			res.setAudienceAverageRating(StringUtils.trimToEmpty(avg));
+//			res.setAudienceAverageRating(StringUtils.trimToEmpty(avg));
+			json.put("audienceAverageRating", StringUtils.trimToEmpty(avg));
+
 		}
 		if (isElementPresent(audienceUserRating)) {
 			String userRating = getDriver().findElement(audienceUserRating).getAttribute("innerText");
 			userRating = StringUtils.trimToEmpty(StringUtils.removeStart(userRating, "User Ratings:"));
 			try {
-				res.setAudienceRatingCount(nf.parse(userRating).intValue());
+//				res.setAudienceRatingCount(nf.parse(userRating).intValue());
+				json.put("audienceRatingCount", nf.parse(userRating).intValue());
+
 			} catch (ParseException e) {
 				LOG.error(e.getMessage());
 			}
 		}
 		if (isElementPresent(criticConsensus)) {
 			WebElement criticConsensusEle = getDriver().findElement(criticConsensus);
-			res.setCriticsConsensus(criticConsensusEle.getAttribute("innerText"));
+//			res.setCriticsConsensus(criticConsensusEle.getAttribute("innerText"));
+			json.put("criticsConsensus", criticConsensusEle.getAttribute("innerText"));
+
 		}
-		return res;
+		return json;
 	}
 
-	private List<RTCast> processCast(ReadContext ctx) {
-		List<RTCast> res = new ArrayList<>();
+	private List<Map<String, Object>> processCast(ReadContext ctx) {
+//		List<RTCast> res = new ArrayList<>();
 		@SuppressWarnings("unchecked")
 		List<Map<String, Object>> actors = ctx.read("$.actors", List.class);
 		List<String> characters = ctx.read("$.character");
 		for (int i = 0; i < actors.size(); i ++) {
-			RTCast cast = new RTCast();
+//			RTCast cast = new RTCast();
 			Map<String, Object> actor = actors.get(i);
-			cast.setName((String)actor.get("name"));
-			cast.setImage((String)actor.get("image"));
-			cast.setLink((String)actor.get("sameAs"));
-			cast.setType((String)actor.get("@type"));
+//			cast.setName((String)actor.get("name"));
+//			cast.setImage((String)actor.get("image"));
+//			cast.setLink((String)actor.get("sameAs"));
+//			cast.setType((String)actor.get("@type"));
 
 			if (characters.size() == actors.size()) {
-				cast.setCharacters(characters.get(i));
+//				cast.setCharacters(characters.get(i));
+				actor.put("characters", characters.get(i));
 			} else {
-				By charXpath = By.xpath("//span[@title=\"" + cast.getName() + "\"]/../following-sibling::span");
+				By charXpath = By.xpath("//span[@title=\"" + (String)actor.get("name") + "\"]/../following-sibling::span");
 				if (isElementPresent(charXpath)) {
-					cast.setCharacters(getDriver().findElement(charXpath).getAttribute("title"));
+//					cast.setCharacters(getDriver().findElement(charXpath).getAttribute("title"));
+					actor.put("characters", getDriver().findElement(charXpath).getAttribute("title"));
 				}
 			}
-			res.add(cast);
+//			res.add(cast);
 		}
-		return res;
+		return actors;
 	}
 	private String joinString(ReadContext ctx, String path) {
 		List<String> names = ctx.read(path);

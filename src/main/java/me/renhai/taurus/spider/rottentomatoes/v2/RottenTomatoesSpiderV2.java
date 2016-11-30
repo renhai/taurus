@@ -3,34 +3,19 @@ package me.renhai.taurus.spider.rottentomatoes.v2;
 import java.net.URLEncoder;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import com.alibaba.fastjson.JSON;
-
 import me.renhai.taurus.spider.rottentomatoes.RTMovie;
-import me.renhai.taurus.tools.MovieDataImporter;
 import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.pipeline.ResultItemsCollectorPipeline;
 
 @Service
 public class RottenTomatoesSpiderV2 {
-	private static final Logger LOG = LoggerFactory.getLogger(RottenTomatoesSpiderV2.class);
+//	private static final Logger LOG = LoggerFactory.getLogger(RottenTomatoesSpiderV2.class);
 
-	@PostConstruct
-	private void init() {
-		
-	}
-	
-	@Autowired
-	private MovieDataImporter movieDataImporter;
-	
 	@Autowired
 	private RottenTomatoesMovieProcessor rottenTomatoesMovieProcessor;
 	
@@ -69,12 +54,6 @@ public class RottenTomatoesSpiderV2 {
 		movie.setRating(items.get("rating"));
 		movie.setTimestamp(System.currentTimeMillis());
 		
-        try {
-        	movieDataImporter.processAndMergeData(JSON.toJSONString(items.getAll()));
-        	LOG.info("processAndMergeData: " + movie.getLink());
-        } catch (Exception e) {
-            LOG.warn("process and merge data error", e);
-        }
         return movie;
 	}
 

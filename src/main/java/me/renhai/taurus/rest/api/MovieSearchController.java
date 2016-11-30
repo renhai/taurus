@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +19,7 @@ import me.renhai.taurus.service.MovieSearchService;
 @RestController
 @RequestMapping("/api/search")
 public class MovieSearchController {
-	private static final Logger LOG = LoggerFactory.getLogger(MovieSearchController.class);
+//	private static final Logger LOG = LoggerFactory.getLogger(MovieSearchController.class);
 	
 	@Autowired
 	private MovieSearchService movieSearchService;

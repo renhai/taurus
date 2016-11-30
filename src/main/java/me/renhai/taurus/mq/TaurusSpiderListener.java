@@ -33,7 +33,7 @@ public class TaurusSpiderListener {
         	movieDataImporter.processAndMergeData(message);
         	log.info("received one data and handled: " + message.getString("link"));
         } catch (Exception e) {
-            log.error("process and merge data error.", e);
+            log.error("process and merge data error." + message.toString(), e);
         }
     }
 	@RabbitHandler
@@ -42,7 +42,7 @@ public class TaurusSpiderListener {
 			movieDataImporter.processAndMergeData(content);
         	log.info("received one data and handled.");
 		} catch (Exception e) {
-            log.error("process and merge data error.", e);
+            log.error("process and merge data error." + content, e);
 		}
 	}
 }

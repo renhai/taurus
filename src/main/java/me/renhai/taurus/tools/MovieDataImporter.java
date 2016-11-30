@@ -149,14 +149,14 @@ public class MovieDataImporter {
 		Iterator<Object> iterator = casts.iterator();
 		while (iterator.hasNext()) {
 			JSONObject one = (JSONObject)iterator.next();
-			String celebrityLink = formatCelebrityLink(one.getString("link"));
+			String celebrityLink = formatCelebrityLink(one.getString("sameAs"));
 			Celebrity ce = celebrityRepository.findByLink(celebrityLink);
 			if (ce == null) {
 				ce = new Celebrity();
 				ce.setName(one.getString("name"));
 				ce.setImage(one.getString("image"));
 				ce.setLink(celebrityLink);
-				ce.setType(one.getString("type"));
+				ce.setType(one.getString("@type"));
 				ce.setSource(Movie.Source.ROTTEN_TOMATOES.getCode());
 				ce.setCreateTime(System.currentTimeMillis());
 				celebrityRepository.save(ce);

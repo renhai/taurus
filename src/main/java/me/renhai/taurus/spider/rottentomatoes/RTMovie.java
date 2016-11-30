@@ -2,6 +2,9 @@ package me.renhai.taurus.spider.rottentomatoes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import com.alibaba.fastjson.JSONObject;
 
 import net.minidev.json.JSONArray;
 
@@ -22,8 +25,8 @@ public class RTMovie {
 	private String image;
 	private Long timestamp;
 	
-	private RTRating rating;
-	private List<RTCast> cast = new ArrayList<>();
+	private JSONObject rating;
+	private List<Map<String, Object>> cast = new ArrayList<>();
 	
 	public Long getMovieId() {
 		return movieId;
@@ -87,16 +90,16 @@ public class RTMovie {
 		this.studio = studio;
 	}
 
-	public RTRating getRating() {
+	public JSONObject getRating() {
 		return rating;
 	}
-	public void setRating(RTRating rating) {
+	public void setRating(JSONObject rating) {
 		this.rating = rating;
 	}
-	public List<RTCast> getCast() {
+	public List<Map<String, Object>> getCast() {
 		return cast;
 	}
-	public void setCast(List<RTCast> cast) {
+	public void setCast(List<Map<String, Object>> cast) {
 		this.cast = cast;
 	}
 	
