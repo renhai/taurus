@@ -1,4 +1,4 @@
-package me.renhai.taurus.service;
+package me.renhai.taurus.spider.task;
 
 import javax.mail.MessagingException;
 
@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import me.renhai.taurus.spider.task.NightstandPageProcessor;
+import me.renhai.taurus.service.SmtpMailSender;
 import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Spider;
 
