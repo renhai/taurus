@@ -7,11 +7,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(
+indexes = {
+	@Index (name = "idx_celebrityid_casting", columnList = "celebrityId")
+}, 
 uniqueConstraints = {
 	@UniqueConstraint(name = "uk_movieid_celebrityid_character_casting", columnNames = {"movieId", "celebrityId", "characters"})
 })
