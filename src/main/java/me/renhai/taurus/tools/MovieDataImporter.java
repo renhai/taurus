@@ -1,8 +1,11 @@
 package me.renhai.taurus.tools;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Iterator;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -27,6 +30,9 @@ import me.renhai.taurus.repository.MovieRepository;
 @Component
 public class MovieDataImporter {
 	private static final Logger LOG = LoggerFactory.getLogger(MovieDataImporter.class);
+	
+	private SimpleDateFormat dateformat = new SimpleDateFormat("MMMM dd, yyyy");
+
 	
 	@Autowired
 	private AuthorRepository authorRepository;
@@ -56,13 +62,31 @@ public class MovieDataImporter {
 	}
 	
 	public void processAndMergeData(JSONObject j) {
-
-		Movie movieEntity = saveOrUpdateMovie(j);
-//		saveOrUpdateRating(j, movieEntity.getId());
-		
-		saveOrUpdateCastings(j, movieEntity.getId());
-		saveOrUpdateDirectors(j, movieEntity.getId());
-		saveOrUpdateAuthors(j, movieEntity.getId());
+		if (j.containsKey("movieId")) {
+			Movie movieEntity = saveOrUpdateMovie(j);
+			saveOrUpdateCastings(j, movieEntity.getId());
+			saveOrUpdateDirectors(j, movieEntity.getId());
+			saveOrUpdateAuthors(j, movieEntity.getId());		
+		} else if (j.containsKey("actorId")) {
+			String link = StringUtils.trimToEmpty(j.getString("link"));
+			if (StringUtils.isEmpty(link)) return;
+			Celebrity cel = celebrityRepository.findByLink(link);
+			if (cel != null) {
+				cel.setActorId(StringUtils.trimToEmpty(j.getString("actorId")));
+				String dateStr = StringUtils.trimToEmpty(j.getString("birthday"));
+				if (StringUtils.isNotEmpty(dateStr) && !StringUtils.equals("Not Available", dateStr)) {
+					try {
+						cel.setBirthday(dateformat.parse(dateStr));
+					} catch (ParseException e) {
+						LOG.error(e.getMessage());
+					}
+				}
+				cel.setBirthplace(StringUtils.trimToEmpty(j.getString("birthplace")));
+				cel.setBio(StringUtils.trimToEmpty(j.getString("bio")));
+				cel.setUpdateTime(System.currentTimeMillis());
+				celebrityRepository.save(cel);
+			}
+		}
 	} 
 	
 	private Movie buildMovieFromJson(JSONObject j) {
