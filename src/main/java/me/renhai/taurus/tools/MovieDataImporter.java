@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.Iterator;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -69,6 +68,7 @@ public class MovieDataImporter {
 			saveOrUpdateAuthors(j, movieEntity.getId());		
 		} else if (j.containsKey("actorId")) {
 			String link = StringUtils.trimToEmpty(j.getString("link"));
+			link = StringUtils.removeEnd(link, "/");
 			if (StringUtils.isEmpty(link)) return;
 			Celebrity cel = celebrityRepository.findByLink(link);
 			if (cel != null) {
@@ -82,8 +82,9 @@ public class MovieDataImporter {
 					}
 				}
 				cel.setBirthplace(StringUtils.trimToEmpty(j.getString("birthplace")));
-				cel.setBio(StringUtils.trimToEmpty(j.getString("bio")));
+//				cel.setBio(StringUtils.trimToEmpty(j.getString("bio")));
 				cel.setUpdateTime(System.currentTimeMillis());
+				cel.setImage(StringUtils.trimToEmpty(j.getString("image")));
 				celebrityRepository.save(cel);
 			}
 		}
@@ -93,7 +94,7 @@ public class MovieDataImporter {
 		Movie movie = new Movie();
 		movie.setOuterId(j.getString("movieId"));
 		movie.setSource(Movie.Source.ROTTEN_TOMATOES.getCode());
-		movie.setLink(j.getString("link"));
+		movie.setLink(StringUtils.removeEnd(j.getString("link"), "/"));
 		movie.setTitle(j.getString("title"));
 		movie.setSynopsis(j.getString("movieSynopsis"));
 		movie.setMpaaRating(j.getString("mpaaRating"));
