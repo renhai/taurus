@@ -6,4 +6,5 @@ import me.renhai.taurus.entity.Movie;
 
 public interface MovieRepository extends JpaRepository<Movie, Integer> {
 	Movie findByLink(String link);
+	Movie findBySourceAndOuterId(Integer source, String outerId);
 }

@@ -118,7 +118,8 @@ public class MovieDataImporter {
 	
 	private Movie saveOrUpdateMovie(JSONObject j) {
 		Movie newMovie = buildMovieFromJson(j);
-		Movie movieEntity = movieRepository.findByLink(newMovie.getLink());
+//		Movie movieEntity = movieRepository.findByLink(newMovie.getLink());
+		Movie movieEntity = movieRepository.findBySourceAndOuterId(Movie.Source.ROTTEN_TOMATOES.getCode(), newMovie.getOuterId());
 		if (movieEntity != null) {
 			BeanUtils.copyProperties(newMovie, movieEntity, "id", "rating", "createTime");
 			BeanUtils.copyProperties(newMovie.getRating(), movieEntity.getRating(), "movie");
