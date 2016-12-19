@@ -12,6 +12,9 @@ import org.hibernate.search.query.dsl.QueryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import me.renhai.taurus.entity.Celebrity;
@@ -21,12 +24,10 @@ import me.renhai.taurus.entity.Movie;
 public class MovieSearchService {
 	private static final Logger LOG = LoggerFactory.getLogger(MovieSearchService.class);
 
-	private static final int PAGE_SIZE = 10;
-	
 	@Autowired
     private EntityManager entityManager;
 	
-	public List<Movie> searchMovieByKeyword(String keyword) {
+	public Page<Movie> searchMovieByKeyword(String keyword, Pageable pageable) {
 		FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
 		QueryBuilder queryBuilder = fullTextEntityManager.getSearchFactory().buildQueryBuilder()
 				.forEntity(Movie.class).get();
@@ -42,7 +43,8 @@ public class MovieSearchService {
 				)
 				.createQuery();
 		FullTextQuery fullTextQuery = fullTextEntityManager.createFullTextQuery(luceneQuery, Movie.class);
-		fullTextQuery.setMaxResults(PAGE_SIZE);
+		fullTextQuery.setMaxResults(pageable.getPageSize()).setFirstResult(pageable.getOffset());
+		int resultSize = fullTextQuery.getResultSize();
 		@SuppressWarnings("unchecked")
 		List<Movie> entities = fullTextQuery.getResultList();
 		
@@ -55,10 +57,10 @@ public class MovieSearchService {
 //			return movieVo;
 //		}).collect(Collectors.toList());
 //		return result;
-		return entities;
+		return new PageImpl<>(entities, pageable, resultSize);
 	}
 	
-	public List<Celebrity> searchCelebrity(String keyword) {
+	public Page<Celebrity> searchCelebrity(String keyword, Pageable pageable) {
 		FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
 		QueryBuilder queryBuilder = fullTextEntityManager.getSearchFactory().buildQueryBuilder()
 				.forEntity(Celebrity.class).get();
@@ -73,9 +75,11 @@ public class MovieSearchService {
 						)
 				.createQuery();
 		FullTextQuery fullTextQuery = fullTextEntityManager.createFullTextQuery(luceneQuery, Celebrity.class);
-		fullTextQuery.setMaxResults(PAGE_SIZE);
+		fullTextQuery.setMaxResults(pageable.getPageSize()).setFirstResult(pageable.getOffset());
+		int resultSize = fullTextQuery.getResultSize();
+		
 		@SuppressWarnings("unchecked")
 		List<Celebrity> result = fullTextQuery.getResultList();
-		return result;
+		return new PageImpl<>(result, pageable, resultSize);
 	}
 }
