@@ -9,4 +9,5 @@ import me.renhai.taurus.entity.Celebrity;
 public interface CelebrityRepository extends JpaRepository<Celebrity, Integer> {
 	Celebrity findByLink(String link);
 	List<Celebrity> findByName(String name);
+	Celebrity findBySourceAndActorId(Integer source, String actorId);
 }

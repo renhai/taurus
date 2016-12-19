@@ -12,6 +12,7 @@ import javax.persistence.Index;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.search.annotations.Analyzer;
 import org.hibernate.search.annotations.Field;
@@ -22,7 +23,8 @@ indexes = {
 	@Index (name = "idx_name_celebrity", columnList = "name")
 }, 
 uniqueConstraints = {
-	@UniqueConstraint(name = "uk_link_celebrity", columnNames = {"link"})
+	@UniqueConstraint(name = "uk_link_celebrity", columnNames = {"link"}),
+	@UniqueConstraint(name = "uk_source_actorid_celebrity", columnNames = {"source", "actorId"}),
 })
 @Entity
 @Indexed
@@ -35,6 +37,7 @@ public class Celebrity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 	private String actorId;
+	@NotNull
 	private Integer source;
 	@Column(length = 25)
 	private String type;
