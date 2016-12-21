@@ -84,21 +84,23 @@ public class MovieDataImporter {
 				cel.setBirthplace(StringUtils.trimToEmpty(j.getString("birthplace")));
 				cel.setUpdateTime(System.currentTimeMillis());
 				cel.setImage(StringUtils.trimToEmpty(j.getString("image")));
+				cel.setBio(StringUtils.trim(j.getString("bio")));
 				celebrityRepository.save(cel);
 			} 
-		} else if (j.containsKey("bio")) {
-			String link = StringUtils.trimToEmpty(j.getString("link"));
-			link = StringUtils.removeEnd(link, "/");
-			link = StringUtils.removeEnd(link, "/biography");
-			link = StringUtils.removeEnd(link, "/");
-			if (StringUtils.isEmpty(link)) return;
-			Celebrity cel = celebrityRepository.findByLink(link);
-			if (cel != null) {
-				cel.setBio(j.getString("bio"));
-				cel.setUpdateTime(System.currentTimeMillis());
-				celebrityRepository.save(cel);
-			}
-		}
+		} 
+//		else if (j.containsKey("bio")) {
+//			String link = StringUtils.trimToEmpty(j.getString("link"));
+//			link = StringUtils.removeEnd(link, "/");
+//			link = StringUtils.removeEnd(link, "/biography");
+//			link = StringUtils.removeEnd(link, "/");
+//			if (StringUtils.isEmpty(link)) return;
+//			Celebrity cel = celebrityRepository.findByLink(link);
+//			if (cel != null) {
+//				cel.setBio(j.getString("bio"));
+//				cel.setUpdateTime(System.currentTimeMillis());
+//				celebrityRepository.save(cel);
+//			}
+//		}
 	} 
 	
 	private Movie buildMovieFromJson(JSONObject j) {
