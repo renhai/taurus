@@ -73,14 +73,15 @@ public class MovieDataImporter {
 			Celebrity cel = celebrityRepository.findByLink(link);
 			if (cel != null) {
 				cel.setActorId(StringUtils.trimToEmpty(j.getString("actorId")));
-				String dateStr = StringUtils.trimToEmpty(j.getString("birthday"));
-				if (StringUtils.isNotEmpty(dateStr) && !StringUtils.equals("Not Available", dateStr)) {
-					try {
-						cel.setBirthday(dateformat.parse(dateStr));
-					} catch (ParseException e) {
-						LOG.error(e.getMessage());
-					}
-				}
+//				String dateStr = StringUtils.trimToEmpty(j.getString("birthday"));
+//				if (StringUtils.isNotEmpty(dateStr) && !StringUtils.equals("Not Available", dateStr)) {
+//					try {
+//						cel.setBirthday(dateformat.parse(dateStr));
+//					} catch (ParseException e) {
+//						LOG.error(e.getMessage());
+//					}
+//				}
+				cel.setBirthday(j.getDate("birthday"));
 				cel.setBirthplace(StringUtils.trimToEmpty(j.getString("birthplace")));
 				cel.setUpdateTime(System.currentTimeMillis());
 				cel.setImage(StringUtils.trimToEmpty(j.getString("image")));
