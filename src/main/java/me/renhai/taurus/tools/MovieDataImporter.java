@@ -1,7 +1,5 @@
 package me.renhai.taurus.tools;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Iterator;
 
 import org.apache.commons.lang3.StringUtils;
@@ -30,7 +28,7 @@ import me.renhai.taurus.repository.MovieRepository;
 public class MovieDataImporter {
 	private static final Logger LOG = LoggerFactory.getLogger(MovieDataImporter.class);
 	
-	private SimpleDateFormat dateformat = new SimpleDateFormat("MMMM dd, yyyy");
+//	private SimpleDateFormat dateformat = new SimpleDateFormat("MMMM dd, yyyy");
 
 	
 	@Autowired
@@ -69,6 +67,7 @@ public class MovieDataImporter {
 		} else if (j.containsKey("actorId")) {
 			String link = StringUtils.trimToEmpty(j.getString("link"));
 			link = StringUtils.removeEnd(link, "/");
+			link = StringUtils.replaceOnce(link, "http:", "https:");
 			if (StringUtils.isEmpty(link)) return;
 			Celebrity cel = celebrityRepository.findByLink(link);
 			if (cel != null) {
