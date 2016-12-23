@@ -51,7 +51,7 @@ public class MovieDataImporter {
 		try {
 			j = (JSONObject)JSONObject.parseObject(text);
 		} catch (Exception e) {
-			LOG.error(e.getMessage() + ": " + text);
+			LOG.error(e.getMessage());
 			return;
 		}
 		if (j == null || j.isEmpty()) return;
@@ -59,6 +59,7 @@ public class MovieDataImporter {
 	}
 	
 	public void processAndMergeData(JSONObject j) {
+    	LOG.info("received one data and handled: " + j.getString("link"));
 		if (j.containsKey("movieId")) {
 			Movie movieEntity = saveOrUpdateMovie(j);
 			saveOrUpdateCastings(j, movieEntity.getId());

@@ -31,7 +31,6 @@ public class TaurusSpiderListener {
     public void receive(JSONObject message) {
         try {
         	movieDataImporter.processAndMergeData(message);
-        	log.info("received one data and handled: " + message.getString("link"));
         } catch (Exception e) {
             log.error("process and merge data error." + message.toString(), e);
         }
@@ -40,7 +39,6 @@ public class TaurusSpiderListener {
 	public void receive(String content) {
 		try {
 			movieDataImporter.processAndMergeData(content);
-        	log.info("received one data and handled.");
 		} catch (Exception e) {
             log.error("process and merge data error." + content, e);
 		}
