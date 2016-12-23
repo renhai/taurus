@@ -73,21 +73,15 @@ public class MovieDataImporter {
 			Celebrity cel = celebrityRepository.findByLink(link);
 			if (cel != null) {
 				cel.setActorId(StringUtils.trimToEmpty(j.getString("actorId")));
-//				String dateStr = StringUtils.trimToEmpty(j.getString("birthday"));
-//				if (StringUtils.isNotEmpty(dateStr) && !StringUtils.equals("Not Available", dateStr)) {
-//					try {
-//						cel.setBirthday(dateformat.parse(dateStr));
-//					} catch (ParseException e) {
-//						LOG.error(e.getMessage());
-//					}
-//				}
 				cel.setBirthday(j.getDate("birthday"));
 				cel.setBirthplace(StringUtils.trimToEmpty(j.getString("birthplace")));
 				cel.setUpdateTime(System.currentTimeMillis());
 				cel.setImage(StringUtils.trimToEmpty(j.getString("image")));
 				cel.setBio(StringUtils.trim(j.getString("bio")));
 				celebrityRepository.save(cel);
-			} 
+			} else {
+				LOG.info("celebrity not exists: " + link);
+			}
 		} 
 //		else if (j.containsKey("bio")) {
 //			String link = StringUtils.trimToEmpty(j.getString("link"));
@@ -109,10 +103,10 @@ public class MovieDataImporter {
 		movie.setOuterId(j.getString("movieId"));
 		movie.setSource(Movie.Source.ROTTEN_TOMATOES.getCode());
 		movie.setLink(StringUtils.removeEnd(j.getString("link"), "/"));
-		movie.setTitle(j.getString("title"));
-		movie.setSynopsis(j.getString("movieSynopsis"));
-		movie.setMpaaRating(j.getString("mpaaRating"));
-		movie.setGenres(j.getString("genre"));
+		movie.setTitle(StringUtils.trimToEmpty(j.getString("title")));
+		movie.setSynopsis(StringUtils.trim(j.getString("movieSynopsis")));
+		movie.setMpaaRating(StringUtils.trim(j.getString("mpaaRating")));
+		movie.setGenres(StringUtils.trim(j.getString("genre")));
 		String runTimeStr = j.getString("runTime");
 		if (StringUtils.isNotBlank(runTimeStr)) {
 			movie.setRuntime(Integer.parseInt(StringUtils.replacePattern(runTimeStr, "[^\\d]", "")));
@@ -120,7 +114,7 @@ public class MovieDataImporter {
 		movie.setYear(j.getInteger("year"));
 		movie.setInTheatersDate(j.getDate("inTheaters"));
 		movie.setOnDvdDate(j.getDate("onDvd"));
-		movie.setStudio(j.getString("studio"));
+		movie.setStudio(StringUtils.trim(j.getString("studio")));
 		movie.setImage(j.getString("image"));
 		movie.setTimestamp(j.getLong("timestamp"));
 		
