@@ -1,8 +1,12 @@
 package me.renhai.taurus.tools;
 
 import java.util.Iterator;
+import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -72,13 +76,70 @@ public class MovieDataImporter {
 			if (StringUtils.isEmpty(link)) return;
 			Celebrity cel = celebrityRepository.findByLink(link);
 			if (cel != null) {
-				cel.setActorId(StringUtils.trimToEmpty(j.getString("actorId")));
-				cel.setBirthday(j.getDate("birthday"));
-				cel.setBirthplace(StringUtils.trimToEmpty(j.getString("birthplace")));
-				cel.setUpdateTime(System.currentTimeMillis());
-				cel.setImage(StringUtils.trimToEmpty(j.getString("image")));
-				cel.setBio(StringUtils.trim(j.getString("bio")));
-				celebrityRepository.save(cel);
+				String actorId = StringUtils.trimToEmpty(j.getString("actorId"));
+				Celebrity existCel = celebrityRepository.findBySourceAndActorId(Movie.Source.ROTTEN_TOMATOES.getCode(), actorId);
+				if (existCel == null) {
+					cel.setActorId(actorId);
+					cel.setBirthday(j.getDate("birthday"));
+					cel.setBirthplace(StringUtils.trimToEmpty(j.getString("birthplace")));
+					cel.setUpdateTime(System.currentTimeMillis());
+					cel.setImage(StringUtils.trimToEmpty(j.getString("image")));
+					cel.setBio(StringUtils.trim(j.getString("bio")));
+					celebrityRepository.save(cel);
+				} else {
+					//conflict uk_source_actorid
+					//find castings by cel.id
+					//set casting.celebrity_id = existCel.id
+					List<Casting> castings = castingRepository.findByCelebrityId(cel.getId());
+					if (CollectionUtils.isNotEmpty(castings)) {
+						for (Casting casting : castings) {
+							LOG.info("casting before change: "
+									+ ToStringBuilder.reflectionToString(casting, ToStringStyle.JSON_STYLE));
+							casting.setCelebrityId(existCel.getId());
+							casting.setUpdateTime(System.currentTimeMillis());
+							LOG.info("casting after change: "
+									+ ToStringBuilder.reflectionToString(casting, ToStringStyle.JSON_STYLE));
+						}
+						castingRepository.save(castings);
+					}
+					
+					//find author by cel.id
+					//set author.celebrity_id = existCel.id
+					List<Author> authors = authorRepository.findByCelebrityId(cel.getId());
+					if (CollectionUtils.isNotEmpty(authors)) {
+						for (Author author : authors) {
+							LOG.info("author before change: "
+									+ ToStringBuilder.reflectionToString(author, ToStringStyle.JSON_STYLE));
+							author.setCelebrityId(existCel.getId());
+							author.setUpdateTime(System.currentTimeMillis());
+							LOG.info("author after change: "
+									+ ToStringBuilder.reflectionToString(author, ToStringStyle.JSON_STYLE));
+						}
+						authorRepository.save(authors);
+					}
+					
+					//find director by cel.id
+					//set director.celebrity_id = existCel.id
+					List<Director> directors = directorRepository.findByCelebrityId(cel.getId());
+					if (CollectionUtils.isNotEmpty(directors)) {
+						for (Director director : directors) {
+							LOG.info("director before change: "
+									+ ToStringBuilder.reflectionToString(director, ToStringStyle.JSON_STYLE));
+							director.setCelebrityId(existCel.getId());
+							director.setUpdateTime(System.currentTimeMillis());
+							LOG.info("director after change: "
+									+ ToStringBuilder.reflectionToString(director, ToStringStyle.JSON_STYLE));
+						}
+						directorRepository.save(directors);
+					}
+					
+					//delete cel
+					celebrityRepository.delete(cel);
+					LOG.info("delete celebrity: " + ToStringBuilder.reflectionToString(cel, ToStringStyle.JSON_STYLE)
+					+ ", merge to celebrity: "
+					+ ToStringBuilder.reflectionToString(existCel, ToStringStyle.JSON_STYLE));
+					
+				}
 			} else {
 				LOG.info("celebrity not exists: " + link);
 			}
