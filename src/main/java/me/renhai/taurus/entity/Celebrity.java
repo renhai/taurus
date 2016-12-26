@@ -44,8 +44,10 @@ public class Celebrity implements Serializable {
 	@Field
 	@Analyzer(definition = "en")
 	@Column(length = 128)
+	@NotNull
 	private String name;
 	@Column(length = 128)
+	@NotNull
 	private String link;
 	@Column(length = 255)
 	private String image;
