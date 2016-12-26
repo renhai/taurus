@@ -90,55 +90,56 @@ public class MovieDataImporter {
 					//conflict uk_source_actorid
 					//find castings by cel.id
 					//set casting.celebrity_id = existCel.id
-					List<Casting> castings = castingRepository.findByCelebrityId(cel.getId());
-					if (CollectionUtils.isNotEmpty(castings)) {
-						for (Casting casting : castings) {
-							LOG.info("casting before change: "
-									+ ToStringBuilder.reflectionToString(casting, ToStringStyle.JSON_STYLE));
-							casting.setCelebrityId(existCel.getId());
-							casting.setUpdateTime(System.currentTimeMillis());
-							LOG.info("casting after change: "
-									+ ToStringBuilder.reflectionToString(casting, ToStringStyle.JSON_STYLE));
+					if (!existCel.getId().equals(cel.getId())) {
+						List<Casting> castings = castingRepository.findByCelebrityId(cel.getId());
+						if (CollectionUtils.isNotEmpty(castings)) {
+							for (Casting casting : castings) {
+								LOG.info("casting before change: "
+										+ ToStringBuilder.reflectionToString(casting, ToStringStyle.JSON_STYLE));
+								casting.setCelebrityId(existCel.getId());
+								casting.setUpdateTime(System.currentTimeMillis());
+								LOG.info("casting after change: "
+										+ ToStringBuilder.reflectionToString(casting, ToStringStyle.JSON_STYLE));
+							}
+							castingRepository.save(castings);
 						}
-						castingRepository.save(castings);
-					}
-					
-					//find author by cel.id
-					//set author.celebrity_id = existCel.id
-					List<Author> authors = authorRepository.findByCelebrityId(cel.getId());
-					if (CollectionUtils.isNotEmpty(authors)) {
-						for (Author author : authors) {
-							LOG.info("author before change: "
-									+ ToStringBuilder.reflectionToString(author, ToStringStyle.JSON_STYLE));
-							author.setCelebrityId(existCel.getId());
-							author.setUpdateTime(System.currentTimeMillis());
-							LOG.info("author after change: "
-									+ ToStringBuilder.reflectionToString(author, ToStringStyle.JSON_STYLE));
+						
+						//find author by cel.id
+						//set author.celebrity_id = existCel.id
+						List<Author> authors = authorRepository.findByCelebrityId(cel.getId());
+						if (CollectionUtils.isNotEmpty(authors)) {
+							for (Author author : authors) {
+								LOG.info("author before change: "
+										+ ToStringBuilder.reflectionToString(author, ToStringStyle.JSON_STYLE));
+								author.setCelebrityId(existCel.getId());
+								author.setUpdateTime(System.currentTimeMillis());
+								LOG.info("author after change: "
+										+ ToStringBuilder.reflectionToString(author, ToStringStyle.JSON_STYLE));
+							}
+							authorRepository.save(authors);
 						}
-						authorRepository.save(authors);
-					}
-					
-					//find director by cel.id
-					//set director.celebrity_id = existCel.id
-					List<Director> directors = directorRepository.findByCelebrityId(cel.getId());
-					if (CollectionUtils.isNotEmpty(directors)) {
-						for (Director director : directors) {
-							LOG.info("director before change: "
-									+ ToStringBuilder.reflectionToString(director, ToStringStyle.JSON_STYLE));
-							director.setCelebrityId(existCel.getId());
-							director.setUpdateTime(System.currentTimeMillis());
-							LOG.info("director after change: "
-									+ ToStringBuilder.reflectionToString(director, ToStringStyle.JSON_STYLE));
+						
+						//find director by cel.id
+						//set director.celebrity_id = existCel.id
+						List<Director> directors = directorRepository.findByCelebrityId(cel.getId());
+						if (CollectionUtils.isNotEmpty(directors)) {
+							for (Director director : directors) {
+								LOG.info("director before change: "
+										+ ToStringBuilder.reflectionToString(director, ToStringStyle.JSON_STYLE));
+								director.setCelebrityId(existCel.getId());
+								director.setUpdateTime(System.currentTimeMillis());
+								LOG.info("director after change: "
+										+ ToStringBuilder.reflectionToString(director, ToStringStyle.JSON_STYLE));
+							}
+							directorRepository.save(directors);
 						}
-						directorRepository.save(directors);
+						
+						//delete cel
+						celebrityRepository.delete(cel);
+						LOG.info("delete celebrity: " + ToStringBuilder.reflectionToString(cel, ToStringStyle.JSON_STYLE)
+						+ ", merge to celebrity: "
+						+ ToStringBuilder.reflectionToString(existCel, ToStringStyle.JSON_STYLE));
 					}
-					
-					//delete cel
-					celebrityRepository.delete(cel);
-					LOG.info("delete celebrity: " + ToStringBuilder.reflectionToString(cel, ToStringStyle.JSON_STYLE)
-					+ ", merge to celebrity: "
-					+ ToStringBuilder.reflectionToString(existCel, ToStringStyle.JSON_STYLE));
-					
 				}
 			} else {
 				LOG.info("celebrity not exists: " + link);
