@@ -109,57 +109,61 @@ public class MovieDataImporter {
 		List<Casting> castings = castingRepository.findByCelebrityId(dupcel.getId());
 		if (CollectionUtils.isNotEmpty(castings)) {
 			for (Casting casting : castings) {
-				LOG.info("casting before change: "
-						+ ToStringBuilder.reflectionToString(casting, ToStringStyle.JSON_STYLE));
-				casting.setCelebrityId(cel.getId());
-				casting.setUpdateTime(System.currentTimeMillis());
-				LOG.info("casting after change: "
-						+ ToStringBuilder.reflectionToString(casting, ToStringStyle.JSON_STYLE));
-				Casting existCasting = castingRepository.findByMovieIdAndCelebrityIdAndCharacters(casting.getMovieId(), casting.getCelebrityId(), casting.getCharacters());
-				if (existCasting != null) {
-					castingRepository.delete(existCasting);
+				Casting exist = castingRepository.findByMovieIdAndCelebrityIdAndCharacters(casting.getMovieId(), cel.getId(), casting.getCharacters());
+				if (exist != null) {
+					castingRepository.delete(casting);
 					castingRepository.flush();
-					LOG.info("delete duplicate casting: " + ToStringBuilder.reflectionToString(existCasting, ToStringStyle.NO_CLASS_NAME_STYLE));
-				} 
-				castingRepository.save(casting);
+					LOG.info("delete duplicate casting: " + ToStringBuilder.reflectionToString(casting, ToStringStyle.NO_CLASS_NAME_STYLE));
+				} else {
+					LOG.info("casting before change: "
+							+ ToStringBuilder.reflectionToString(casting, ToStringStyle.JSON_STYLE));
+					casting.setCelebrityId(cel.getId());
+					casting.setUpdateTime(System.currentTimeMillis());
+					LOG.info("casting after change: "
+							+ ToStringBuilder.reflectionToString(casting, ToStringStyle.JSON_STYLE));
+					castingRepository.save(casting);
+				}
 			}
 		}
 		
 		List<Author> authors = authorRepository.findByCelebrityId(dupcel.getId());
 		if (CollectionUtils.isNotEmpty(authors)) {
 			for (Author author : authors) {
-				LOG.info("author before change: "
-						+ ToStringBuilder.reflectionToString(author, ToStringStyle.JSON_STYLE));
-				author.setCelebrityId(cel.getId());
-				author.setUpdateTime(System.currentTimeMillis());
-				LOG.info("author after change: "
-						+ ToStringBuilder.reflectionToString(author, ToStringStyle.JSON_STYLE));
-				Author dupAuthor = authorRepository.findByMovieIdAndCelebrityId(author.getMovieId(), author.getCelebrityId());
-				if (dupAuthor != null) {
-					authorRepository.delete(dupAuthor);
+				Author exist = authorRepository.findByMovieIdAndCelebrityId(author.getMovieId(), cel.getId());
+				if (exist != null) {
+					authorRepository.delete(author);
 					authorRepository.flush();
-					LOG.info("delete duplicate author: " + ToStringBuilder.reflectionToString(dupAuthor, ToStringStyle.NO_CLASS_NAME_STYLE));
+					LOG.info("delete duplicate author: " + ToStringBuilder.reflectionToString(author, ToStringStyle.NO_CLASS_NAME_STYLE));
+				} else {
+					LOG.info("author before change: "
+							+ ToStringBuilder.reflectionToString(author, ToStringStyle.JSON_STYLE));
+					author.setCelebrityId(cel.getId());
+					author.setUpdateTime(System.currentTimeMillis());
+					LOG.info("author after change: "
+							+ ToStringBuilder.reflectionToString(author, ToStringStyle.JSON_STYLE));
+					authorRepository.save(author);
 				}
-				authorRepository.save(author);
+				
 			}
 		}
 		
 		List<Director> directors = directorRepository.findByCelebrityId(dupcel.getId());
 		if (CollectionUtils.isNotEmpty(directors)) {
 			for (Director director : directors) {
-				LOG.info("director before change: "
-						+ ToStringBuilder.reflectionToString(director, ToStringStyle.JSON_STYLE));
-				director.setCelebrityId(cel.getId());
-				director.setUpdateTime(System.currentTimeMillis());
-				LOG.info("director after change: "
-						+ ToStringBuilder.reflectionToString(director, ToStringStyle.JSON_STYLE));
-				Director dupDirector = directorRepository.findByMovieIdAndCelebrityId(director.getMovieId(), director.getCelebrityId());
-				if (dupDirector != null) {
-					directorRepository.delete(dupDirector);
+				Director exist = directorRepository.findByMovieIdAndCelebrityId(director.getMovieId(), cel.getId());
+				if (exist != null) {
+					directorRepository.delete(director);
 					directorRepository.flush();
-					LOG.info("delete duplicate director: " + ToStringBuilder.reflectionToString(dupDirector, ToStringStyle.NO_CLASS_NAME_STYLE));
+					LOG.info("delete duplicate director: " + ToStringBuilder.reflectionToString(director, ToStringStyle.NO_CLASS_NAME_STYLE));
+				} else {
+					LOG.info("director before change: "
+							+ ToStringBuilder.reflectionToString(director, ToStringStyle.JSON_STYLE));
+					director.setCelebrityId(cel.getId());
+					director.setUpdateTime(System.currentTimeMillis());
+					LOG.info("director after change: "
+							+ ToStringBuilder.reflectionToString(director, ToStringStyle.JSON_STYLE));
+					directorRepository.save(director);
 				}
-				directorRepository.save(director);
 			}
 		}
 	}
