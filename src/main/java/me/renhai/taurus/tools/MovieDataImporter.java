@@ -78,8 +78,10 @@ public class MovieDataImporter {
 			String actorId = StringUtils.trimToEmpty(j.getString("actorId"));
 			if (cel != null) {
 				Celebrity dupcel = celebrityRepository.findBySourceAndActorId(Movie.Source.ROTTEN_TOMATOES.getCode(), actorId);
-				if (dupcel != null) {//duplicate found
-					deleteDupAndMerge(dupcel, cel);
+				if (dupcel != null) {
+					if (!dupcel.getId().equals(cel.getId())) {//duplicate found
+						deleteDupAndMerge(dupcel, cel);
+					}
 				}
 				cel.setUpdateTime(System.currentTimeMillis());
 			} else {
