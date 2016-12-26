@@ -74,10 +74,12 @@ public class MovieDataImporter {
 			link = StringUtils.removeEnd(link, "/");
 			link = StringUtils.replaceOnce(link, "http:", "https:");
 			if (StringUtils.isEmpty(link)) return;
+			String actorId = StringUtils.trim(j.getString("actorId"));
+			if (StringUtils.isEmpty(actorId)) return;
+			
 			Celebrity cel = celebrityRepository.findByLink(link);
-			String actorId = StringUtils.trimToEmpty(j.getString("actorId"));
+			Celebrity dupcel = celebrityRepository.findBySourceAndActorId(Movie.Source.ROTTEN_TOMATOES.getCode(), actorId);
 			if (cel != null) {
-				Celebrity dupcel = celebrityRepository.findBySourceAndActorId(Movie.Source.ROTTEN_TOMATOES.getCode(), actorId);
 				if (dupcel != null) {
 					if (!dupcel.getId().equals(cel.getId())) {//duplicate found
 						deleteDupAndMerge(dupcel, cel);
@@ -85,9 +87,15 @@ public class MovieDataImporter {
 				}
 				cel.setUpdateTime(System.currentTimeMillis());
 			} else {
-				LOG.info("celebrity not exists: " + link);
-				cel = new Celebrity();
-				cel.setCreateTime(System.currentTimeMillis());
+				LOG.info("celebrity link not exists: " + link);
+				if (dupcel != null) {
+					LOG.warn("actorId exists, ignore this celebrity, actorId: " + actorId);
+					return;
+				} else {
+					LOG.info("create new celebrity: " + link);
+					cel = new Celebrity();
+					cel.setCreateTime(System.currentTimeMillis());
+				}
 			}
 			cel.setActorId(actorId);
 			cel.setSource(Movie.Source.ROTTEN_TOMATOES.getCode());
@@ -104,7 +112,7 @@ public class MovieDataImporter {
 	private void deleteDupAndMerge(Celebrity dupcel, Celebrity cel) {
 		celebrityRepository.delete(dupcel);
 		celebrityRepository.flush();
-		LOG.info("delete duplicate celebrity: " + ToStringBuilder.reflectionToString(dupcel, ToStringStyle.NO_CLASS_NAME_STYLE));
+		LOG.warn("actorId exists, delete existing celebrity: " + ToStringBuilder.reflectionToString(dupcel, ToStringStyle.NO_CLASS_NAME_STYLE));
 		
 		List<Casting> castings = castingRepository.findByCelebrityId(dupcel.getId());
 		if (CollectionUtils.isNotEmpty(castings)) {
