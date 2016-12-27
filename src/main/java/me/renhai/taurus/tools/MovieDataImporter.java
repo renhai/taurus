@@ -63,7 +63,7 @@ public class MovieDataImporter {
 	}
 	
 	public void processAndMergeData(JSONObject j) {
-    	LOG.info("received one data and handled: " + j.getString("link"));
+    	LOG.info("received one data and handled: {}", j.getString("link"));
 		if (j.containsKey("movieId")) {
 			Movie movieEntity = saveOrUpdateMovie(j);
 			saveOrUpdateCastings(j, movieEntity.getId());
@@ -87,12 +87,12 @@ public class MovieDataImporter {
 				}
 				cel.setUpdateTime(System.currentTimeMillis());
 			} else {
-				LOG.info("celebrity link not exists: " + link);
+				LOG.info("celebrity link not exists: {}", link);
 				if (dupcel != null) {
-					LOG.warn("actorId exists, ignore this celebrity, actorId: " + actorId);
+					LOG.warn("actorId exists, ignore this celebrity, actorId: {}", actorId);
 					return;
 				} else {
-					LOG.info("create new celebrity: " + link);
+					LOG.info("create new celebrity: {}", link);
 					cel = new Celebrity();
 					cel.setCreateTime(System.currentTimeMillis());
 				}
@@ -112,7 +112,7 @@ public class MovieDataImporter {
 	private void deleteDupAndMerge(Celebrity dupcel, Celebrity cel) {
 		celebrityRepository.delete(dupcel);
 		celebrityRepository.flush();
-		LOG.warn("actorId exists, delete existing celebrity: " + ToStringBuilder.reflectionToString(dupcel, ToStringStyle.NO_CLASS_NAME_STYLE));
+		LOG.warn("actorId exists, delete existing celebrity: {}", ToStringBuilder.reflectionToString(dupcel, ToStringStyle.NO_CLASS_NAME_STYLE));
 		
 		List<Casting> castings = castingRepository.findByCelebrityId(dupcel.getId());
 		if (CollectionUtils.isNotEmpty(castings)) {
@@ -121,14 +121,12 @@ public class MovieDataImporter {
 				if (exist != null) {
 					castingRepository.delete(casting);
 					castingRepository.flush();
-					LOG.info("delete duplicate casting: " + ToStringBuilder.reflectionToString(casting, ToStringStyle.NO_CLASS_NAME_STYLE));
+					LOG.info("delete duplicate casting: {}", ToStringBuilder.reflectionToString(casting, ToStringStyle.NO_CLASS_NAME_STYLE));
 				} else {
-					LOG.info("casting before change: "
-							+ ToStringBuilder.reflectionToString(casting, ToStringStyle.JSON_STYLE));
+					LOG.info("casting before change: {}", ToStringBuilder.reflectionToString(casting, ToStringStyle.JSON_STYLE));
 					casting.setCelebrityId(cel.getId());
 					casting.setUpdateTime(System.currentTimeMillis());
-					LOG.info("casting after change: "
-							+ ToStringBuilder.reflectionToString(casting, ToStringStyle.JSON_STYLE));
+					LOG.info("casting after change: {}", ToStringBuilder.reflectionToString(casting, ToStringStyle.JSON_STYLE));
 					castingRepository.save(casting);
 				}
 			}
@@ -141,14 +139,12 @@ public class MovieDataImporter {
 				if (exist != null) {
 					authorRepository.delete(author);
 					authorRepository.flush();
-					LOG.info("delete duplicate author: " + ToStringBuilder.reflectionToString(author, ToStringStyle.NO_CLASS_NAME_STYLE));
+					LOG.info("delete duplicate author: {}", ToStringBuilder.reflectionToString(author, ToStringStyle.NO_CLASS_NAME_STYLE));
 				} else {
-					LOG.info("author before change: "
-							+ ToStringBuilder.reflectionToString(author, ToStringStyle.JSON_STYLE));
+					LOG.info("author before change: {}", ToStringBuilder.reflectionToString(author, ToStringStyle.JSON_STYLE));
 					author.setCelebrityId(cel.getId());
 					author.setUpdateTime(System.currentTimeMillis());
-					LOG.info("author after change: "
-							+ ToStringBuilder.reflectionToString(author, ToStringStyle.JSON_STYLE));
+					LOG.info("author after change: {}", ToStringBuilder.reflectionToString(author, ToStringStyle.JSON_STYLE));
 					authorRepository.save(author);
 				}
 				
@@ -164,12 +160,10 @@ public class MovieDataImporter {
 					directorRepository.flush();
 					LOG.info("delete duplicate director: " + ToStringBuilder.reflectionToString(director, ToStringStyle.NO_CLASS_NAME_STYLE));
 				} else {
-					LOG.info("director before change: "
-							+ ToStringBuilder.reflectionToString(director, ToStringStyle.JSON_STYLE));
+					LOG.info("director before change: {}", ToStringBuilder.reflectionToString(director, ToStringStyle.JSON_STYLE));
 					director.setCelebrityId(cel.getId());
 					director.setUpdateTime(System.currentTimeMillis());
-					LOG.info("director after change: "
-							+ ToStringBuilder.reflectionToString(director, ToStringStyle.JSON_STYLE));
+					LOG.info("director after change: {}", ToStringBuilder.reflectionToString(director, ToStringStyle.JSON_STYLE));
 					directorRepository.save(director);
 				}
 			}
