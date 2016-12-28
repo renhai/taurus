@@ -1,6 +1,7 @@
 package me.renhai.taurus.vo;
 
 import java.util.Date;
+import java.util.List;
 
 public class MovieVo {
 	private Integer id;
@@ -18,6 +19,7 @@ public class MovieVo {
 	private String studio;
 	private String image;
 	private RatingVo rating;
+	private List<CastingItem> castingItems;
 	
 	public Integer getId() {
 		return id;
@@ -109,4 +111,11 @@ public class MovieVo {
 	public void setRating(RatingVo rating) {
 		this.rating = rating;
 	}
+	public List<CastingItem> getCastingItems() {
+		return castingItems;
+	}
+	public void setCastingItems(List<CastingItem> castingItems) {
+		this.castingItems = castingItems;
+	}
+	
 }
