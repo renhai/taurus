@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(
@@ -28,10 +29,14 @@ public class Casting implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
+	@NotNull
 	private Integer movieId;
+	@NotNull
 	private Integer celebrityId;
 	@Column(length = 128)
 	private String characters;
+	@NotNull
+	private Integer ranking;
 	private Long createTime;
 	private Long updateTime;
 	
@@ -72,6 +77,12 @@ public class Casting implements Serializable {
 	}
 	public void setUpdateTime(Long updateTime) {
 		this.updateTime = updateTime;
+	}
+	public Integer getRanking() {
+		return ranking;
+	}
+	public void setRanking(Integer ranking) {
+		this.ranking = ranking;
 	}
 	
 }

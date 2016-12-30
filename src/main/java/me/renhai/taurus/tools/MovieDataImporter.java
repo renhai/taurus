@@ -59,9 +59,98 @@ public class MovieDataImporter {
 			return;
 		}
 		if (j == null || j.isEmpty()) return;
-		processAndMergeData(j);
+//		processAndMergeData(j);
+
+		processCelebrityWithMovie(j);
+	}
+
+	private void processCelebrityWithMovie(JSONObject j) {
+		Celebrity celebrity = saveOrUpdateCelebrity(j.getJSONObject("celebrity"));
+		if (celebrity == null) return;
+		Movie movie = saveOrUpdateMovie(j.getJSONObject("movie"));
+		String role = j.getString("role");
+		Integer index = j.getInteger("index");
+		switch (role) {
+		case "casting":
+			String characters = StringUtils.trim(j.getString("characters"));
+			Casting castingEntity = castingRepository.findByMovieIdAndCelebrityIdAndCharacters(movie.getId(), celebrity.getId(), characters);
+			if (castingEntity == null) {
+				castingEntity = new Casting();
+				castingEntity.setMovieId(movie.getId());
+				castingEntity.setCelebrityId(celebrity.getId());
+				castingEntity.setCharacters(characters);
+				castingEntity.setRanking(index);
+				castingEntity.setCreateTime(System.currentTimeMillis());
+			} else {
+				castingEntity.setRanking(index);
+				castingEntity.setUpdateTime(System.currentTimeMillis());
+			}
+			castingRepository.save(castingEntity);
+			break;
+		case "director":
+			Director directorEntity = directorRepository.findByMovieIdAndCelebrityId(movie.getId(), celebrity.getId());
+			if (directorEntity == null) {
+				directorEntity = new Director();
+				directorEntity.setMovieId(movie.getId());
+				directorEntity.setCelebrityId(celebrity.getId());
+				directorEntity.setRanking(index);
+				directorEntity.setCreateTime(System.currentTimeMillis());
+			} else {
+				directorEntity.setRanking(index);
+				directorEntity.setUpdateTime(System.currentTimeMillis());
+			}
+			directorRepository.save(directorEntity);
+			break;
+		case "author":
+			Author authorEntity = authorRepository.findByMovieIdAndCelebrityId(movie.getId(), celebrity.getId());
+			if (authorEntity == null) {
+				authorEntity = new Author();
+				authorEntity.setMovieId(movie.getId());
+				authorEntity.setCelebrityId(celebrity.getId());
+				authorEntity.setRanking(index);
+				authorEntity.setCreateTime(System.currentTimeMillis());
+			} else {
+				authorEntity.setRanking(index);
+				authorEntity.setUpdateTime(System.currentTimeMillis());
+			}
+			authorRepository.save(authorEntity);
+			break;
+		default:
+			break;
+		}
+    	LOG.info("connect movie to celebrity, role: {}, movieId: {}, celebrityId: {}", role, movie.getId(), celebrity.getId());
 	}
 	
+	private Celebrity saveOrUpdateCelebrity(JSONObject j) {
+		String actorId = StringUtils.trim(j.getString("actorId"));
+		if (StringUtils.isEmpty(actorId)) return null;
+		String link = StringUtils.trimToEmpty(j.getString("link"));
+		link = StringUtils.removeEnd(link, "/");
+		link = StringUtils.replaceOnce(link, "http:", "https:");
+		if (StringUtils.isEmpty(link)) return null;
+		Celebrity cel = celebrityRepository.findBySourceAndActorId(Movie.Source.ROTTEN_TOMATOES.getCode(), actorId);
+		if (cel == null) {
+			cel = new Celebrity();
+			cel.setCreateTime(System.currentTimeMillis());
+		} else {
+			cel.setUpdateTime(System.currentTimeMillis());
+		}
+		cel.setActorId(actorId);
+		cel.setSource(Movie.Source.ROTTEN_TOMATOES.getCode());
+		cel.setName(StringUtils.trim(j.getString("name")));
+		cel.setLink(link);
+		cel.setImage(StringUtils.trimToEmpty(j.getString("image")));
+		try {
+			cel.setBirthday(j.getDate("birthday"));
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+		}
+		cel.setBirthplace(StringUtils.trimToEmpty(j.getString("birthplace")));
+		cel.setBio(StringUtils.trim(j.getString("bio")));
+		celebrityRepository.save(cel);
+		return cel;
+	}
+
 	public void processAndMergeData(JSONObject j) {
     	LOG.info("received one data and handled: {}", j.getString("link"));
 		if (j.containsKey("movieId")) {

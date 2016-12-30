@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
 
 @Table(
 uniqueConstraints = {
@@ -23,8 +24,12 @@ public class Director implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
+	@NotNull
 	private Integer movieId;
+	@NotNull
 	private Integer celebrityId;
+	@NotNull
+	private Integer ranking;
 	
 	private Long createTime;
 	private Long updateTime;
@@ -60,6 +65,12 @@ public class Director implements Serializable {
 	}
 	public void setUpdateTime(Long updateTime) {
 		this.updateTime = updateTime;
+	}
+	public Integer getRanking() {
+		return ranking;
+	}
+	public void setRanking(Integer ranking) {
+		this.ranking = ranking;
 	}
 	
 }

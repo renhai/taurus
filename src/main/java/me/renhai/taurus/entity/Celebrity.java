@@ -36,6 +36,7 @@ public class Celebrity implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
+	@NotNull
 	private String actorId;
 	@NotNull
 	private Integer source;

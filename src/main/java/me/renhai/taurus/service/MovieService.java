@@ -58,7 +58,7 @@ public class MovieService {
 				+ "from casting "
 				+ "left join celebrity on celebrity.id = casting.celebrity_id "
 				+ "where casting.movie_id = ? "
-				+ "order by casting.id asc";
+				+ "order by casting.ranking asc";
 		
 		return jdbcTemplate.query(sql, new RowMapper<CastingItem>() {
 
