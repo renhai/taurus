@@ -36,3 +36,5 @@ Thumbs.db
 *.exe
 *.o
 *.so
+
+src/main/resources/application.properties
